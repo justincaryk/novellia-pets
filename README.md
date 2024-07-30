@@ -51,7 +51,38 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 
 ### TODO
 
-- [] extract types from postgraphile
-- [] integrate graphql on frontend
-- [] backend testing
-- [] next-auth for sso ?
+**Backend**
+- [] write sql for schema init
+- [] write row level security 
+- [] write sql for seeding db
+
+**Frontend**
+- [] update signup & signin api calls on front end
+- [] admin dashboard view
+   - [] view pets
+   - [] view 
+- [] user dashboard view
+- [] add a pet view
+- [] new record forms
+
+**Unspec'd**
+- [] one more feature that is cool
+- [] search feature ?
+
+**Build**
+- [] Spin up with 2 commands at most
+
+**Extras**
+- [] dog logo ?
+- [] malware scanner
+  `clamav.js` or `malware-scanner`
+
+
+
+### Thoughts / Considerations
+
+- How and why you modeled the data structure(s) the way you did
+- How and why you structured your API(s)
+ 
+- How and why you decided on the page(s) you built
+- What improvements you’d make if you want to build this for real
