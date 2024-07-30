@@ -1,0 +1,65 @@
+name: PR Quality Check
+
+on: [pull_request]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: yarn
+
+      - name: Run format
+        working-directory: frontend
+        run: yarn format
+
+      - name: Run lint
+        working-directory: frontend
+        run: yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: yarn
+
+      - name: Run tests
+        working-directory: frontend
+        run: yarn test
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: yarn
+
+      - name: Build project
+        working-directory: frontend
+        run: yarn build
