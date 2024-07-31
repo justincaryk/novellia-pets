@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent } from 'react';
+import { useAtom } from 'jotai';
+import { FormEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
@@ -13,14 +14,21 @@ import PageTitle from '@/components/parts/page-title';
 import SkipLink from '@/components/parts/skip-link';
 import { PRIVATE_ROUTES } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useCurrentUser } from '../auth/atoms/current-user';
+import { useAuthApi } from '../auth/auth-api';
 import { USER_NAME_FORM_FIELDS, UserNameSchema } from './types';
 
-export default function UserNameForm() {
+interface UpdateUserFormProps {
+  onSuccess: () => void;
+}
+export default function UserNameForm({ onSuccess }: UpdateUserFormProps) {
   const router = useRouter();
-
+  const { mutate: updateUser, status, data } = useAuthApi().updateUser;
+  const [currentUser] = useAtom(useCurrentUser);
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     mode: 'onSubmit',
@@ -28,28 +36,38 @@ export default function UserNameForm() {
   });
 
   const trySubmit = async (data: Yup.InferType<typeof UserNameSchema>) => {
+    if (isSubmitting) {
+      return;
+    }
+
     console.log('data: ', data);
 
-    // try {
-    //   const res = await fetch('/api/sign-in', {
-    //     method: 'POST',
-    //     body: JSON.stringify(data),
-    //   });
-
-    //   const status = res.status;
-    //   const result = (await res.json()) as SigninResponsePayload;
-
-    //   if (status === 200) {
-    //     if (result.code === 'ok') {
-    //       // artificial sleep timer for debugging transition states
-    //       // await sleep(1500);
-    //     }
-    //   }
-    // } catch (err) {
-    //   // TODO: set general error
-    //   console.error('error: ', err);
-    // }
+    await updateUser({
+      id: currentUser?.userId,
+      patch: {
+        firstName: data.firstName,
+        lastName: data.lastName,
+      },
+    });
   };
+
+  useEffect(() => {
+    if (status === 'success') {
+      console.log('result data: ', data);
+      if (!data.updateUserById?.user?.id) {
+        setError('root', {
+          message: 'Sorry, something went wrong. Please refresh the page and try again.',
+        });
+      } else {
+        onSuccess();
+      }
+      return;
+    }
+    // server error
+    if (status === 'error') {
+      setError('root', { message: 'An unknown error has occured. Please reload and try again' });
+    }
+  }, [data, setError, status, onSuccess]);
 
   return (
     <form
@@ -75,10 +93,9 @@ export default function UserNameForm() {
         {...register(USER_NAME_FORM_FIELDS.LAST_NAME)}
       />
 
-      {/* TODO: form submit error */}
-      {/* <div className="text-red-error" role="alert">
-            {signinError ? signinError : ''}
-          </div> */}
+      <div className="text-red-error" role="alert">
+        {errors.root ? errors.root.message : ''}
+      </div>
 
       <div className="flex gap-x-4 items-center justify-end">
         <Link href={PRIVATE_ROUTES.DASHBOARD} className="w-1/3">
