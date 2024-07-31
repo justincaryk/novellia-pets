@@ -58,7 +58,7 @@ export default function Interests() {
       </div>
       <div className="flex gap-x-4 items-center justify-end">
         <Link
-          href={''}//ROUTES.DASHBOARD}
+          href={''} //ROUTES.DASHBOARD}
           className="w-1/3"
           title="Skip interests and go straight to dashboard"
         >
