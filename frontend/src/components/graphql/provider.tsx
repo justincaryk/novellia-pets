@@ -10,7 +10,7 @@ import GraphQLClientContext from './context';
 export default function GraphQLProvider({ children }: PropsWithChildren) {
   const [currentUser] = useAtom(useCurrentUser);
   const headers = useMemo(() => {
-    let headers = new Headers();
+    const headers = new Headers();
 
     if (currentUser?.jwt) {
       console.log('jwt:::', currentUser?.jwt);

@@ -11,7 +11,7 @@ import Button from '@/components/parts/form/button';
 import PageSubtitle from '@/components/parts/page-subtitle';
 import PageTitle from '@/components/parts/page-title';
 import SkipLink from '@/components/parts/skip-link';
-// import { ROUTES } from '@/constants';
+import { PRIVATE_ROUTES } from '@/constants';
 import { industries } from '@/mocks';
 
 export default function Occupation() {
@@ -27,7 +27,7 @@ export default function Occupation() {
     if (!userIndustry?.id) {
       return;
     }
-    // router.push(ROUTES.INTERESTS);
+    router.push(PRIVATE_ROUTES.DASHBOARD);
   };
 
   return (
@@ -37,8 +37,8 @@ export default function Occupation() {
         <PageSubtitle text={'What is your professional background?'} />
       </div>
 
-      {/* <SkipLink href={ROUTES.INTERESTS} skipLinkText="Skip and go to Interests List" />
-      <SkipLink href={ROUTES.DASHBOARD} skipLinkText="Skip and go to Dashboard" /> */}
+      {/* <SkipLink href={PRIVATE_ROUTES.INTERESTS} skipLinkText="Skip and go to Interests List" /> */}
+      <SkipLink href={PRIVATE_ROUTES.DASHBOARD} skipLinkText="Skip and go to Dashboard" />
 
       <div
         className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-x-4 sm:gap-y-4"
@@ -55,7 +55,7 @@ export default function Occupation() {
         ))}
       </div>
       <div className="flex gap-x-4 items-center justify-end">
-        <Link href={'' /*ROUTES.INTERESTS*/} className="w-1/3">
+        <Link href={PRIVATE_ROUTES.DASHBOARD} className="w-1/3">
           <Button type="submit">Skip</Button>
         </Link>
         <div className="w-2/3">
