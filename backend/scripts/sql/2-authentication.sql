@@ -89,11 +89,11 @@ END $do$;
 CREATE TABLE IF NOT EXISTS public.user (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     password text,
-    user_name varchar(150) NOT NULL,
-    first_name varchar (75),
-    last_name varchar (75),
+    email varchar(150) NOT NULL,
+    first_name varchar(75),
+    last_name varchar(75),
     role user_role DEFAULT 'user',
-    CONSTRAINT core_user_name_key UNIQUE (user_name)
+    CONSTRAINT core_email_key UNIQUE (email)
 );
 
 CREATE TABLE IF NOT EXISTS public.admin (
@@ -125,69 +125,81 @@ BEGIN
         USING (EXISTS (
             SELECT 1
             FROM public.user
-            WHERE id = user_id AND user_name = CURRENT_USER
+            WHERE id = user_id AND email = CURRENT_USER
         ));';
     RAISE NOTICE 'Policy "policy_users" created.';
 END $do$;
 
 CREATE TYPE public.jwt_token AS (
-    ROLE text, --db role of the user
-    exp integer, --expiry date as the unix epoch
-    user_id uuid, --db identifier of the user
-    user_name varchar(150), -- username for sign in, email ideally
-    first_name varchar (75), --display name first
-    last_name_name varchar (75), --display name last
-    user_role user_role --user role as referenceable enum
+    ROLE text, -- db role of the user
+    exp integer, -- expiry date as the unix epoch
+    user_id uuid, -- db identifier of the user
+    email varchar(150), -- username for sign in, email ideally
+    first_name varchar(75), -- display name first
+    last_name varchar(75), -- display name last
+    user_role user_role -- user role as referenceable enum
 );
 
 -- Define functions
-CREATE OR REPLACE FUNCTION signup (email varchar(50), password varchar(50))
+CREATE OR REPLACE FUNCTION public.signup (input_email varchar(50), input_password varchar(50))
 RETURNS boolean AS $$
 DECLARE
     result varchar DEFAULT NULL;
 BEGIN
-    SELECT user_name
+    SELECT email
     FROM public.user
-    WHERE email = user_name INTO result;
+    WHERE email = input_email INTO result;
     IF NOT found THEN
-        INSERT INTO public.user (user_name, password)
-        VALUES (email, crypt(password, gen_salt('bf')));
+        INSERT INTO public.user (email, password)
+        VALUES (input_email, crypt(input_password, gen_salt('bf')));
     END IF;
     RETURN TRUE;
 END
 $$ LANGUAGE plpgsql VOLATILE SECURITY DEFINER;
 
-GRANT EXECUTE ON FUNCTION public.signup (email varchar(50), password varchar(50))
+GRANT EXECUTE ON FUNCTION public.signup (input_email varchar(50), input_password varchar(50))
 TO anonymous_user;
 
-CREATE OR REPLACE FUNCTION public.signin (email text, password text)
+CREATE OR REPLACE FUNCTION public.signin (input_email text, input_password text)
 RETURNS public.jwt_token AS $$
 DECLARE
     account public.user;
     admin_acc public.admin;
     role text;
 BEGIN
+    -- Retrieve user account
     SELECT *
-    FROM public.user AS a
-    WHERE a.user_name = email INTO account;
+    FROM public.user
+    WHERE email = input_email INTO account;
+
+    -- Retrieve admin account if it exists
     SELECT *
-    FROM public.admin AS b
-    WHERE account.id = user_id INTO admin_acc;
-    IF admin_acc.user_id = account.id THEN
+    FROM public.admin
+    WHERE user_id = account.id INTO admin_acc;
+
+    -- Determine the role based on the existence of admin account
+    IF admin_acc.user_id IS NOT NULL THEN
         role = 'admin';
     ELSE
         role = 'user';
     END IF;
-    IF account.password = crypt(password, account.password) THEN
-        RETURN (role,
-                extract(epoch FROM now() + interval '365 days'),
-                account.id,
-                account.user_name)::public.jwt_token;
+
+    -- Validate password and return JWT token if valid
+    IF account.password = crypt(input_password, account.password) THEN
+        RETURN ROW(
+            role, -- text
+            extract(epoch FROM now() + interval '365 days')::integer, -- expiry as integer
+            account.id, -- uuid
+            account.email, -- varchar(150)
+            account.first_name, -- varchar(75)
+            account.last_name, -- varchar(75)
+            account.role -- user_role
+        )::public.jwt_token;
     ELSE
         RETURN NULL;
     END IF;
-END;
+END
 $$ LANGUAGE plpgsql VOLATILE SECURITY DEFINER;
 
-GRANT EXECUTE ON FUNCTION public.signin (email text, password text)
+GRANT EXECUTE ON FUNCTION public.signin (input_email text, input_password text)
 TO anonymous_user;
