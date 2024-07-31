@@ -98,9 +98,8 @@ DB:
 - pretty easily extend new record types by creating a basic many to many lookup table.
 - to extend just add private.record_type + add a new table
 
-
-
-- security
+Security:
+  - CORS is configured for all at the moment, but should be configured to specific known origins 
   - admin has read only for all but pets.
   - private.pet.owner_name 
     - added so admins dont need access to user records
