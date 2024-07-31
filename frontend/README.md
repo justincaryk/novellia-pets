@@ -53,4 +53,3 @@ Automated testing has been added to help mitigate any potential obvious accessib
 - Screen-reader testing should be performed manually for any new components to ensure keyboard navigation works
 - Skip links have been added to assist keyboard users with quicker navigation
 - Cypress integration tests also consider accessibility standards during their testing via the inclusion of `cypress-axe`.
-
