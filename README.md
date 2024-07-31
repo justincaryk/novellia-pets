@@ -58,7 +58,7 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 - [] revise schema if needed
 
 **Frontend**
-- [] update signup & signin api calls on front end
+- [x] update signup & signin api calls on front end
 - [] admin dashboard view
    - [] view pets
    - [] view 
@@ -66,6 +66,7 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 - [] add a pet view
 - [] new record forms
 - [] first-pet-form > proper max date validation
+- [] search TODOs
 
 **Dealer's Choice**
 - [] one more feature that is cool
