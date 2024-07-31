@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 
@@ -33,7 +32,7 @@ export default function RegisterSuccess({ result }: RegisterSuccessProps) {
       pauseOnRoute: true,
     });
 
-    router.push(PRIVATE_ROUTES.CREATE_FIRST_PET);
+    router.push(PRIVATE_ROUTES.ADD_FIRST_PET);
   };
 
   return (
