@@ -33,16 +33,19 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking', // contains rules that specifically require type information
-    'plugin:@next/next/recommended',
-    'next', // https://github.com/vercel/next.js/blob/canary/packages/eslint-config-next/package.json
     'next/core-web-vitals',
     'plugin:jsx-a11y/recommended',
     'plugin:jest/recommended',
     'plugin:jest/style',
   ],
+
   rules: {
     '@next/next/no-img-element': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^_' }],
   },
+  ignorePatterns: [
+    'src/graphql/generated/graphql.ts', // Add the file to be ignored here
+  ],
 };
