@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { COMPANY_NAME, ROUTES } from '@/constants';
+import { COMPANY_NAME, PRIVATE_ROUTES } from '@/constants';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import Button from '../parts/form/button';
 import PageSubtitle from '../parts/page-subtitle';
@@ -30,7 +30,7 @@ export default function RegisterSuccess() {
           />
           <div>
             <div className="mt-10">
-              <Link href={ROUTES.OCCUPATION}>
+              <Link href={PRIVATE_ROUTES.DASHBOARD}>
                 <Button primary>Continue to profile setup</Button>
               </Link>
             </div>

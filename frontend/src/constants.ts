@@ -1,9 +1,11 @@
-export enum ROUTES {
-  SIGNUP = '/signup',
-  SIGNIN = '/signin',
-  DASHBOARD = '/dashboard',
-  INTERESTS = '/interests',
-  OCCUPATION = '/occupation',
-}
+export const PUBLIC_ROUTES = {
+  SIGNUP: '/signup',
+  SIGNIN: '/signin',
+  AUTH: '/',
+};
 
-export const COMPANY_NAME = 'orca learn';
+export const PRIVATE_ROUTES = {
+  DASHBOARD: '/dashboard',
+};
+
+export const COMPANY_NAME = 'Novellia Pets';

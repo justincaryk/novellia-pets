@@ -11,7 +11,7 @@ import Button from '@/components/parts/form/button';
 import PageSubtitle from '@/components/parts/page-subtitle';
 import PageTitle from '@/components/parts/page-title';
 import SkipLink from '@/components/parts/skip-link';
-import { ROUTES } from '@/constants';
+import { PRIVATE_ROUTES } from '@/constants';
 import { interestOptions } from '@/mocks';
 
 export default function Interests() {
@@ -31,7 +31,7 @@ export default function Interests() {
     const selectedInterests = interestOptions.filter((opt) => userInterestIds.includes(opt.id));
     console.log('user interests: ', selectedInterests);
 
-    router.push(ROUTES.DASHBOARD);
+    router.push(PRIVATE_ROUTES.DASHBOARD);
   };
 
   return (
@@ -40,7 +40,7 @@ export default function Interests() {
         <PageTitle text={'Tell us about your interests.'} />
         <PageSubtitle text={'Please choose as many as you like.'} />
       </div>
-      <SkipLink href={ROUTES.DASHBOARD} skipLinkText="Skip and go to Dashboard" />
+      <SkipLink href={PRIVATE_ROUTES.DASHBOARD} skipLinkText="Skip and go to Dashboard" />
       <div
         className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-x-4 sm:gap-y-4"
         role="group"
@@ -58,7 +58,7 @@ export default function Interests() {
       </div>
       <div className="flex gap-x-4 items-center justify-end">
         <Link
-          href={ROUTES.DASHBOARD}
+          href={''} //ROUTES.DASHBOARD}
           className="w-1/3"
           title="Skip interests and go straight to dashboard"
         >

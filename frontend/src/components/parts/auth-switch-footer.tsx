@@ -1,9 +1,9 @@
+import { PrivatePathname, PublicPathname } from '@/types';
+
 import Link from 'next/link';
 
-import { ROUTES } from '@/constants';
-
 interface AuthSwitchFooterProps {
-  to: ROUTES;
+  to: PrivatePathname | PublicPathname;
   text: string;
   linkText: string;
 }

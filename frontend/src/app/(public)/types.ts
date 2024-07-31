@@ -2,8 +2,6 @@ import * as Yup from 'yup';
 
 import { zxcvbn } from '@zxcvbn-ts/core';
 
-// import { passwordStrength } from 'check-password-strength'
-
 export enum AUTH_FORM_FIELDS {
   EMAIL = 'email',
   PASSWORD = 'password',

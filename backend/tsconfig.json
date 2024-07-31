@@ -9,7 +9,6 @@
     "outDir": "./dist",
     "baseUrl": "."
   },
-
-  "include": ["**/*.ts", "**/*.json"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
