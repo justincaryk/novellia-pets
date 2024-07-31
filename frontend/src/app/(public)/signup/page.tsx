@@ -2,23 +2,24 @@
 
 import { useState } from 'react';
 
-import RegisterForm from '@/components/auth/register-form';
-import RegisterSuccess from '@/components/auth/register-success';
-import AuthSwitchFooter from '@/components/parts/auth-switch-footer';
+import AuthSwitchFooter from '@/components/auth/auth-switch-footer';
+import RegisterForm from '@/components/create-profile/register-form';
+import RegisterSuccess from '@/components/create-profile/register-success';
 import PageTitle from '@/components/parts/page-title';
 import { PUBLIC_ROUTES } from '@/constants';
+import { SignupResult } from '@/graphql/generated/graphql';
 
 export default function SignupPage() {
-  const [successfullyRegistered, setSuccessfullyRegistered] = useState(false);
+  const [registerResult, setRegisterResult] = useState<SignupResult | null>(null);
 
-  const onFormSubmitSuccess = () => {
-    setSuccessfullyRegistered(true);
+  const onFormSubmitSuccess = (result: SignupResult) => {
+    setRegisterResult(result);
   };
 
   return (
     <>
-      {successfullyRegistered ? (
-        <RegisterSuccess />
+      {registerResult ? (
+        <RegisterSuccess result={registerResult} />
       ) : (
         <div className="space-y-10">
           <PageTitle text={'Create an account.'} />

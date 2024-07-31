@@ -2,15 +2,20 @@
 
 import { SigninResponsePayload } from '@/types';
 
-import { FormEvent, useState } from 'react';
+import { useAtom } from 'jotai';
+import { FormEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-import { AUTH_FORM_FIELDS, SigninSchema } from '@/app/(public)/types';
 import Button from '@/components/parts/form/button';
 import FormField from '@/components/parts/form/form-field';
+import { SigninInput } from '@/graphql/generated/graphql';
+import { parseJwt } from '@/utils/utils';
 // import { sleep } from '@/utils/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useCurrentUser, useSetCurrentUser } from './atoms/current-user';
+import { useAuthApi } from './auth-api';
+import { AUTH_FORM_FIELDS, AUTH_TOKEN, SigninSchema } from './types';
 
 // TESTING ONLY:
 // 1. email@exists.com will return "ok" and move forward
@@ -21,6 +26,10 @@ interface LoginProps {
 }
 export default function LoginForm({ onSuccess }: LoginProps) {
   const [signinError, setSigninError] = useState('');
+  const { mutate: signin, data, status } = useAuthApi().signIn;
+
+  const [_, setCurrentUser] = useAtom(useSetCurrentUser);
+  const [currentUser] = useAtom(useCurrentUser);
 
   const {
     register,
@@ -31,33 +40,37 @@ export default function LoginForm({ onSuccess }: LoginProps) {
     resolver: yupResolver(SigninSchema),
   });
 
+  // sign in success
+  useEffect(() => {
+    if (status === 'success') {
+      if (data.signin?.jwtToken && !currentUser?.userId) {
+        localStorage.setItem(AUTH_TOKEN, data.signin.jwtToken);
+        const parsed = parseJwt(data.signin.jwtToken);
+
+        setCurrentUser({
+          userId: parsed.user_id,
+          email: parsed.email,
+          userRole: parsed.user_role,
+          jwt: data.signin?.jwtToken,
+        });
+
+        onSuccess();
+      }
+    }
+  }, [status, data, currentUser, setCurrentUser]);
+
+  // failed
+  useEffect(() => {
+    if (status === 'success' && !data.signin?.jwtToken) {
+      setSigninError('The email or password is incorrect');
+      return;
+    }
+  }, [status, data, setSigninError]);
+
   const trySubmit = async (data: Yup.InferType<typeof SigninSchema>) => {
     console.log('data: ', data);
 
-    try {
-      const res = await fetch('/api/sign-in', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-
-      const status = res.status;
-      const result = (await res.json()) as SigninResponsePayload;
-
-      if (status === 200) {
-        if (result.code === 'ok') {
-          // artificial sleep timer for debugging transition states
-          // await sleep(1500);
-          onSuccess();
-        } else if (result.code === 'invalid credentials') {
-          setSigninError('The email or password is incorrect');
-        } else if (result.code === 'no user found') {
-          setSigninError('No user was found');
-        }
-      }
-    } catch (err) {
-      // TODO: set general error
-      console.error('error: ', err);
-    }
+    await signin(data as SigninInput);
   };
 
   return (

@@ -1,23 +1,13 @@
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
-
+import { useMutation, useQuery, UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
-  [_ in K]?: never;
-};
-export type Incremental<T> =
-  | T
-  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 
-function fetcher<TData, TVariables>(
-  endpoint: string,
-  requestInit: RequestInit,
-  query: string,
-  variables?: TVariables,
-) {
+function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -34,19 +24,19 @@ function fetcher<TData, TVariables>(
     }
 
     return json.data;
-  };
+  }
 }
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  Cursor: { input: any; output: any };
-  Datetime: { input: any; output: any };
-  JwtToken: { input: any; output: any };
-  UUID: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Cursor: { input: any; output: any; }
+  Datetime: { input: any; output: any; }
+  JwtToken: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 export type Admin = Node & {
@@ -109,7 +99,7 @@ export enum AdminsOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC',
+  UserIdDesc = 'USER_ID_DESC'
 }
 
 export type AllergyRecord = Node & {
@@ -196,12 +186,12 @@ export enum AllergyRecordsOrderBy {
   RecordIdAsc = 'RECORD_ID_ASC',
   RecordIdDesc = 'RECORD_ID_DESC',
   SeverityAsc = 'SEVERITY_ASC',
-  SeverityDesc = 'SEVERITY_DESC',
+  SeverityDesc = 'SEVERITY_DESC'
 }
 
 export enum AllergySeverity {
   Mild = 'MILD',
-  Severe = 'SEVERE',
+  Severe = 'SEVERE'
 }
 
 export type Animal = Node & {
@@ -213,6 +203,7 @@ export type Animal = Node & {
   /** Reads and enables pagination through a set of `Pet`. */
   petsByAnimalId: PetsConnection;
 };
+
 
 export type AnimalPetsByAnimalIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -274,7 +265,7 @@ export enum AnimalsOrderBy {
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 /** All input for the create `Admin` mutation. */
@@ -305,6 +296,7 @@ export type CreateAdminPayload = {
   /** Reads a single `User` that is related to this `Admin`. */
   userByUserId?: Maybe<User>;
 };
+
 
 /** The output of our create `Admin` mutation. */
 export type CreateAdminPayloadAdminEdgeArgs = {
@@ -340,6 +332,7 @@ export type CreateAllergyRecordPayload = {
   recordByRecordId?: Maybe<Record>;
 };
 
+
 /** The output of our create `AllergyRecord` mutation. */
 export type CreateAllergyRecordPayloadAllergyRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<AllergyRecordsOrderBy>>;
@@ -371,6 +364,7 @@ export type CreateAnimalPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
+
 
 /** The output of our create `Animal` mutation. */
 export type CreateAnimalPayloadAnimalEdgeArgs = {
@@ -407,6 +401,7 @@ export type CreatePetPayload = {
   /** Reads a single `User` that is related to this `Pet`. */
   userByOwnerId?: Maybe<User>;
 };
+
 
 /** The output of our create `Pet` mutation. */
 export type CreatePetPayloadPetEdgeArgs = {
@@ -446,6 +441,7 @@ export type CreateRecordPayload = {
   userByOwnerId?: Maybe<User>;
 };
 
+
 /** The output of our create `Record` mutation. */
 export type CreateRecordPayloadRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<RecordsOrderBy>>;
@@ -478,6 +474,7 @@ export type CreateRecordTypePayload = {
   recordTypeEdge?: Maybe<RecordTypesEdge>;
 };
 
+
 /** The output of our create `RecordType` mutation. */
 export type CreateRecordTypePayloadRecordTypeEdgeArgs = {
   orderBy?: InputMaybe<Array<RecordTypesOrderBy>>;
@@ -509,6 +506,7 @@ export type CreateUserPayload = {
   /** An edge for our `User`. May be used by Relay 1. */
   userEdge?: Maybe<UsersEdge>;
 };
+
 
 /** The output of our create `User` mutation. */
 export type CreateUserPayloadUserEdgeArgs = {
@@ -543,6 +541,7 @@ export type CreateVaccineRecordPayload = {
   /** An edge for our `VaccineRecord`. May be used by Relay 1. */
   vaccineRecordEdge?: Maybe<VaccineRecordsEdge>;
 };
+
 
 /** The output of our create `VaccineRecord` mutation. */
 export type CreateVaccineRecordPayloadVaccineRecordEdgeArgs = {
@@ -599,6 +598,7 @@ export type DeleteAdminPayload = {
   userByUserId?: Maybe<User>;
 };
 
+
 /** The output of our delete `Admin` mutation. */
 export type DeleteAdminPayloadAdminEdgeArgs = {
   orderBy?: InputMaybe<Array<AdminsOrderBy>>;
@@ -644,6 +644,7 @@ export type DeleteAllergyRecordPayload = {
   recordByRecordId?: Maybe<Record>;
 };
 
+
 /** The output of our delete `AllergyRecord` mutation. */
 export type DeleteAllergyRecordPayloadAllergyRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<AllergyRecordsOrderBy>>;
@@ -686,6 +687,7 @@ export type DeleteAnimalPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
+
 
 /** The output of our delete `Animal` mutation. */
 export type DeleteAnimalPayloadAnimalEdgeArgs = {
@@ -733,6 +735,7 @@ export type DeletePetPayload = {
   /** Reads a single `User` that is related to this `Pet`. */
   userByOwnerId?: Maybe<User>;
 };
+
 
 /** The output of our delete `Pet` mutation. */
 export type DeletePetPayloadPetEdgeArgs = {
@@ -783,6 +786,7 @@ export type DeleteRecordPayload = {
   userByOwnerId?: Maybe<User>;
 };
 
+
 /** The output of our delete `Record` mutation. */
 export type DeleteRecordPayloadRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<RecordsOrderBy>>;
@@ -825,6 +829,7 @@ export type DeleteRecordTypePayload = {
   /** An edge for our `RecordType`. May be used by Relay 1. */
   recordTypeEdge?: Maybe<RecordTypesEdge>;
 };
+
 
 /** The output of our delete `RecordType` mutation. */
 export type DeleteRecordTypePayloadRecordTypeEdgeArgs = {
@@ -879,6 +884,7 @@ export type DeleteUserPayload = {
   userEdge?: Maybe<UsersEdge>;
 };
 
+
 /** The output of our delete `User` mutation. */
 export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
@@ -923,6 +929,7 @@ export type DeleteVaccineRecordPayload = {
   /** An edge for our `VaccineRecord`. May be used by Relay 1. */
   vaccineRecordEdge?: Maybe<VaccineRecordsEdge>;
 };
+
 
 /** The output of our delete `VaccineRecord` mutation. */
 export type DeleteVaccineRecordPayloadVaccineRecordEdgeArgs = {
@@ -1024,230 +1031,276 @@ export type Mutation = {
   updateVaccineRecordById?: Maybe<UpdateVaccineRecordPayload>;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAdminArgs = {
   input: CreateAdminInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAllergyRecordArgs = {
   input: CreateAllergyRecordInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateAnimalArgs = {
   input: CreateAnimalInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePetArgs = {
   input: CreatePetInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateRecordArgs = {
   input: CreateRecordInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateRecordTypeArgs = {
   input: CreateRecordTypeInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateVaccineRecordArgs = {
   input: CreateVaccineRecordInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAdminArgs = {
   input: DeleteAdminInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAdminByIdArgs = {
   input: DeleteAdminByIdInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAdminByUserIdArgs = {
   input: DeleteAdminByUserIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAllergyRecordArgs = {
   input: DeleteAllergyRecordInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAllergyRecordByIdArgs = {
   input: DeleteAllergyRecordByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAnimalArgs = {
   input: DeleteAnimalInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteAnimalByIdArgs = {
   input: DeleteAnimalByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePetArgs = {
   input: DeletePetInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePetByIdArgs = {
   input: DeletePetByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteRecordArgs = {
   input: DeleteRecordInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteRecordByIdArgs = {
   input: DeleteRecordByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteRecordTypeArgs = {
   input: DeleteRecordTypeInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteRecordTypeByIdArgs = {
   input: DeleteRecordTypeByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserArgs = {
   input: DeleteUserInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserByEmailArgs = {
   input: DeleteUserByEmailInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserByIdArgs = {
   input: DeleteUserByIdInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteVaccineRecordArgs = {
   input: DeleteVaccineRecordInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteVaccineRecordByIdArgs = {
   input: DeleteVaccineRecordByIdInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSigninArgs = {
   input: SigninInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationSignupArgs = {
   input: SignupInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAdminArgs = {
   input: UpdateAdminInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAdminByIdArgs = {
   input: UpdateAdminByIdInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAdminByUserIdArgs = {
   input: UpdateAdminByUserIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAllergyRecordArgs = {
   input: UpdateAllergyRecordInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAllergyRecordByIdArgs = {
   input: UpdateAllergyRecordByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAnimalArgs = {
   input: UpdateAnimalInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateAnimalByIdArgs = {
   input: UpdateAnimalByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePetArgs = {
   input: UpdatePetInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePetByIdArgs = {
   input: UpdatePetByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRecordArgs = {
   input: UpdateRecordInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRecordByIdArgs = {
   input: UpdateRecordByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRecordTypeArgs = {
   input: UpdateRecordTypeInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateRecordTypeByIdArgs = {
   input: UpdateRecordTypeByIdInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserByEmailArgs = {
   input: UpdateUserByEmailInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserByIdArgs = {
   input: UpdateUserByIdInput;
 };
 
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateVaccineRecordArgs = {
   input: UpdateVaccineRecordInput;
 };
+
 
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateVaccineRecordByIdArgs = {
@@ -1292,6 +1345,7 @@ export type Pet = Node & {
   /** Reads a single `User` that is related to this `Pet`. */
   userByOwnerId?: Maybe<User>;
 };
+
 
 export type PetRecordsByPetIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1389,7 +1443,7 @@ export enum PetsOrderBy {
   OwnerLastNameAsc = 'OWNER_LAST_NAME_ASC',
   OwnerLastNameDesc = 'OWNER_LAST_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 /** The root query type which gives access points into the data universe. */
@@ -1448,20 +1502,24 @@ export type Query = Node & {
   vaccineRecordById?: Maybe<VaccineRecord>;
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminArgs = {
   nodeId: Scalars['ID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAdminByUserIdArgs = {
   userId: Scalars['UUID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAllAdminsArgs = {
@@ -1474,6 +1532,7 @@ export type QueryAllAdminsArgs = {
   orderBy?: InputMaybe<Array<AdminsOrderBy>>;
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAllAllergyRecordsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1484,6 +1543,7 @@ export type QueryAllAllergyRecordsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AllergyRecordsOrderBy>>;
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAllAnimalsArgs = {
@@ -1496,6 +1556,7 @@ export type QueryAllAnimalsArgs = {
   orderBy?: InputMaybe<Array<AnimalsOrderBy>>;
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAllPetsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1506,6 +1567,7 @@ export type QueryAllPetsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PetsOrderBy>>;
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAllRecordTypesArgs = {
@@ -1518,6 +1580,7 @@ export type QueryAllRecordTypesArgs = {
   orderBy?: InputMaybe<Array<RecordTypesOrderBy>>;
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAllRecordsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1528,6 +1591,7 @@ export type QueryAllRecordsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<RecordsOrderBy>>;
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAllUsersArgs = {
@@ -1540,6 +1604,7 @@ export type QueryAllUsersArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAllVaccineRecordsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1551,80 +1616,96 @@ export type QueryAllVaccineRecordsArgs = {
   orderBy?: InputMaybe<Array<VaccineRecordsOrderBy>>;
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAllergyRecordArgs = {
   nodeId: Scalars['ID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAllergyRecordByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryAnimalArgs = {
   nodeId: Scalars['ID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryAnimalByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryNodeArgs = {
   nodeId: Scalars['ID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryPetArgs = {
   nodeId: Scalars['ID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryPetByIdArgs = {
   id: Scalars['UUID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRecordArgs = {
   nodeId: Scalars['ID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryRecordByIdArgs = {
   id: Scalars['UUID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryRecordTypeArgs = {
   nodeId: Scalars['ID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryRecordTypeByIdArgs = {
   id: Scalars['UUID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserArgs = {
   nodeId: Scalars['ID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByEmailArgs = {
   email: Scalars['String']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
+
 /** The root query type which gives access points into the data universe. */
 export type QueryVaccineRecordArgs = {
   nodeId: Scalars['ID']['input'];
 };
+
 
 /** The root query type which gives access points into the data universe. */
 export type QueryVaccineRecordByIdArgs = {
@@ -1652,6 +1733,7 @@ export type Record = Node & {
   vaccineRecordsByRecordId: VaccineRecordsConnection;
 };
 
+
 export type RecordAllergyRecordsByRecordIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1661,6 +1743,7 @@ export type RecordAllergyRecordsByRecordIdArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<AllergyRecordsOrderBy>>;
 };
+
 
 export type RecordVaccineRecordsByRecordIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1713,6 +1796,7 @@ export type RecordType = Node & {
   /** Reads and enables pagination through a set of `Record`. */
   recordsByRecordType: RecordsConnection;
 };
+
 
 export type RecordTypeRecordsByRecordTypeArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1777,7 +1861,7 @@ export enum RecordTypesOrderBy {
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 /** A connection to a list of `Record` values. */
@@ -1816,7 +1900,7 @@ export enum RecordsOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RecordTypeAsc = 'RECORD_TYPE_ASC',
-  RecordTypeDesc = 'RECORD_TYPE_DESC',
+  RecordTypeDesc = 'RECORD_TYPE_DESC'
 }
 
 /** All input for the `signin` mutation. */
@@ -1857,7 +1941,6 @@ export type SignupInput = {
 /** The output of our `signup` mutation. */
 export type SignupPayload = {
   __typename?: 'SignupPayload';
-  boolean?: Maybe<Scalars['Boolean']['output']>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -1865,6 +1948,13 @@ export type SignupPayload = {
   clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  signupResult?: Maybe<SignupResult>;
+};
+
+export type SignupResult = {
+  __typename?: 'SignupResult';
+  jwtToken?: Maybe<Scalars['JwtToken']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
 };
 
 /** All input for the `updateAdminById` mutation. */
@@ -1922,6 +2012,7 @@ export type UpdateAdminPayload = {
   userByUserId?: Maybe<User>;
 };
 
+
 /** The output of our update `Admin` mutation. */
 export type UpdateAdminPayloadAdminEdgeArgs = {
   orderBy?: InputMaybe<Array<AdminsOrderBy>>;
@@ -1970,6 +2061,7 @@ export type UpdateAllergyRecordPayload = {
   recordByRecordId?: Maybe<Record>;
 };
 
+
 /** The output of our update `AllergyRecord` mutation. */
 export type UpdateAllergyRecordPayloadAllergyRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<AllergyRecordsOrderBy>>;
@@ -2015,6 +2107,7 @@ export type UpdateAnimalPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
+
 
 /** The output of our update `Animal` mutation. */
 export type UpdateAnimalPayloadAnimalEdgeArgs = {
@@ -2065,6 +2158,7 @@ export type UpdatePetPayload = {
   /** Reads a single `User` that is related to this `Pet`. */
   userByOwnerId?: Maybe<User>;
 };
+
 
 /** The output of our update `Pet` mutation. */
 export type UpdatePetPayloadPetEdgeArgs = {
@@ -2118,6 +2212,7 @@ export type UpdateRecordPayload = {
   userByOwnerId?: Maybe<User>;
 };
 
+
 /** The output of our update `Record` mutation. */
 export type UpdateRecordPayloadRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<RecordsOrderBy>>;
@@ -2163,6 +2258,7 @@ export type UpdateRecordTypePayload = {
   /** An edge for our `RecordType`. May be used by Relay 1. */
   recordTypeEdge?: Maybe<RecordTypesEdge>;
 };
+
 
 /** The output of our update `RecordType` mutation. */
 export type UpdateRecordTypePayloadRecordTypeEdgeArgs = {
@@ -2222,6 +2318,7 @@ export type UpdateUserPayload = {
   userEdge?: Maybe<UsersEdge>;
 };
 
+
 /** The output of our update `User` mutation. */
 export type UpdateUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
@@ -2270,6 +2367,7 @@ export type UpdateVaccineRecordPayload = {
   vaccineRecordEdge?: Maybe<VaccineRecordsEdge>;
 };
 
+
 /** The output of our update `VaccineRecord` mutation. */
 export type UpdateVaccineRecordPayloadVaccineRecordEdgeArgs = {
   orderBy?: InputMaybe<Array<VaccineRecordsOrderBy>>;
@@ -2298,6 +2396,7 @@ export type User = Node & {
   role?: Maybe<UserRole>;
 };
 
+
 export type UserAdminsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -2308,6 +2407,7 @@ export type UserAdminsByUserIdArgs = {
   orderBy?: InputMaybe<Array<AdminsOrderBy>>;
 };
 
+
 export type UserPetsByOwnerIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -2317,6 +2417,7 @@ export type UserPetsByOwnerIdArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<PetsOrderBy>>;
 };
+
 
 export type UserRecordsByOwnerIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
@@ -2366,7 +2467,7 @@ export type UserPatch = {
 
 export enum UserRole {
   Admin = 'ADMIN',
-  User = 'USER',
+  User = 'USER'
 }
 
 /** A connection to a list of `User` values. */
@@ -2407,7 +2508,7 @@ export enum UsersOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RoleAsc = 'ROLE_ASC',
-  RoleDesc = 'ROLE_DESC',
+  RoleDesc = 'ROLE_DESC'
 }
 
 export type VaccineRecord = Node & {
@@ -2487,7 +2588,7 @@ export enum VaccineRecordsOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RecordIdAsc = 'RECORD_ID_ASC',
-  RecordIdDesc = 'RECORD_ID_DESC',
+  RecordIdDesc = 'RECORD_ID_DESC'
 }
 
 export type SigninMutationVariables = Exact<{
@@ -2495,31 +2596,23 @@ export type SigninMutationVariables = Exact<{
   password: Scalars['String']['input'];
 }>;
 
-export type SigninMutation = {
-  __typename?: 'Mutation';
-  signin?: { __typename?: 'SigninPayload'; jwtToken?: any | null } | null;
-};
+
+export type SigninMutation = { __typename?: 'Mutation', signin?: { __typename?: 'SigninPayload', jwtToken?: any | null } | null };
 
 export type SignupMutationVariables = Exact<{
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 }>;
 
-export type SignupMutation = {
-  __typename?: 'Mutation';
-  signup?: { __typename?: 'SignupPayload'; boolean?: boolean | null } | null;
-};
 
-export type AllAnimalsQueryVariables = Exact<{ [key: string]: never }>;
+export type SignupMutation = { __typename?: 'Mutation', signup?: { __typename?: 'SignupPayload', signupResult?: { __typename?: 'SignupResult', status?: string | null, jwtToken?: any | null } | null } | null };
 
-export type AllAnimalsQuery = {
-  __typename?: 'Query';
-  allAnimals?: {
-    __typename?: 'AnimalsConnection';
-    totalCount: number;
-    nodes: Array<{ __typename?: 'Animal'; id: any; name: string } | null>;
-  } | null;
-};
+export type AllAnimalsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllAnimalsQuery = { __typename?: 'Query', allAnimals?: { __typename?: 'AnimalsConnection', totalCount: number, nodes: Array<{ __typename?: 'Animal', id: any, name: string } | null> } | null };
+
+
 
 export const SigninDocument = `
     mutation Signin($email: String!, $password: String!) {
@@ -2529,47 +2622,48 @@ export const SigninDocument = `
 }
     `;
 
-export const useSigninMutation = <TError = unknown, TContext = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<SigninMutation, TError, SigninMutationVariables, TContext>,
-) => {
-  return useMutation<SigninMutation, TError, SigninMutationVariables, TContext>({
+export const useSigninMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<SigninMutation, TError, SigninMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<SigninMutation, TError, SigninMutationVariables, TContext>(
+      {
     mutationKey: ['Signin'],
-    mutationFn: (variables?: SigninMutationVariables) =>
-      fetcher<SigninMutation, SigninMutationVariables>(
-        dataSource.endpoint,
-        dataSource.fetchParams || {},
-        SigninDocument,
-        variables,
-      )(),
-    ...options,
-  });
-};
+    mutationFn: (variables?: SigninMutationVariables) => fetcher<SigninMutation, SigninMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, SigninDocument, variables)(),
+    ...options
+  }
+    )};
 
 export const SignupDocument = `
     mutation Signup($email: String!, $password: String!) {
   signup(input: {inputEmail: $email, inputPassword: $password}) {
-    boolean
+    signupResult {
+      status
+      jwtToken
+    }
   }
 }
     `;
 
-export const useSignupMutation = <TError = unknown, TContext = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<SignupMutation, TError, SignupMutationVariables, TContext>,
-) => {
-  return useMutation<SignupMutation, TError, SignupMutationVariables, TContext>({
+export const useSignupMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<SignupMutation, TError, SignupMutationVariables, TContext>
+    ) => {
+    
+    return useMutation<SignupMutation, TError, SignupMutationVariables, TContext>(
+      {
     mutationKey: ['Signup'],
-    mutationFn: (variables?: SignupMutationVariables) =>
-      fetcher<SignupMutation, SignupMutationVariables>(
-        dataSource.endpoint,
-        dataSource.fetchParams || {},
-        SignupDocument,
-        variables,
-      )(),
-    ...options,
-  });
-};
+    mutationFn: (variables?: SignupMutationVariables) => fetcher<SignupMutation, SignupMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, SignupDocument, variables)(),
+    ...options
+  }
+    )};
 
 export const AllAnimalsDocument = `
     query AllAnimals {
@@ -2583,21 +2677,19 @@ export const AllAnimalsDocument = `
 }
     `;
 
-export const useAllAnimalsQuery = <TData = AllAnimalsQuery, TError = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: AllAnimalsQueryVariables,
-  options?: Omit<UseQueryOptions<AllAnimalsQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseQueryOptions<AllAnimalsQuery, TError, TData>['queryKey'];
-  },
-) => {
-  return useQuery<AllAnimalsQuery, TError, TData>({
+export const useAllAnimalsQuery = <
+      TData = AllAnimalsQuery,
+      TError = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      variables?: AllAnimalsQueryVariables,
+      options?: Omit<UseQueryOptions<AllAnimalsQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<AllAnimalsQuery, TError, TData>['queryKey'] }
+    ) => {
+    
+    return useQuery<AllAnimalsQuery, TError, TData>(
+      {
     queryKey: variables === undefined ? ['AllAnimals'] : ['AllAnimals', variables],
-    queryFn: fetcher<AllAnimalsQuery, AllAnimalsQueryVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      AllAnimalsDocument,
-      variables,
-    ),
-    ...options,
-  });
-};
+    queryFn: fetcher<AllAnimalsQuery, AllAnimalsQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AllAnimalsDocument, variables),
+    ...options
+  }
+    )};

@@ -21,8 +21,13 @@ export default function GraphQLProvider({ children }: PropsWithChildren) {
   }, [currentUser]);
 
   const [graphQLClient, updateGraphQLClient] = useState(
-    new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_HOST || 'http://localhost:3000/api/graphql', {
-      headers,
+    new GraphQLClient(process.env.NEXT_PUBLIC_GRAPHQL_HOST || 'http://127.0.0.1:5000/api/graphql', {
+      headers: {
+        ...headers,
+        credentials: 'include',
+        method: 'POST',
+        mode: 'cors',
+      },
     }),
   );
 
@@ -30,9 +35,14 @@ export default function GraphQLProvider({ children }: PropsWithChildren) {
     if (currentUser?.jwt) {
       updateGraphQLClient(
         new GraphQLClient(
-          process.env.NEXT_PUBLIC_GRAPHQL_HOST || 'http://localhost:3000/api/graphql',
+          process.env.NEXT_PUBLIC_GRAPHQL_HOST || 'http://127.0.0.1:5000/api/graphql',
           {
-            headers,
+            headers: {
+              ...headers,
+              credentials: 'include',
+              method: 'POST',
+              mode: 'cors',
+            },
           },
         ),
       );

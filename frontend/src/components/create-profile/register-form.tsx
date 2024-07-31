@@ -1,16 +1,13 @@
 'use client';
 
-import { RegisterAccountResponsePayload } from '@/types';
-
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
-import { AUTH_FORM_FIELDS, SignupSchema, weakPasswordErrorMsg } from '@/app/(public)/types';
 import Button from '@/components/parts/form/button';
 import FormField from '@/components/parts/form/form-field';
 import ProgressBar from '@/components/parts/progress-bar';
-// import { sleep } from '@/utils/utils';
+import { SignupInput, SignupResult } from '@/graphql/generated/graphql';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   FeedbackType,
@@ -23,6 +20,11 @@ import {
 } from '@zxcvbn-ts/core';
 import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common';
 import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en';
+import { useAuthApi } from '../auth/auth-api';
+import { AUTH_FORM_FIELDS } from '../auth/types';
+import { SignupSchema, weakPasswordErrorMsg } from './types';
+
+// import { sleep } from '@/utils/utils';
 
 const options: OptionsType = {
   dictionary: {
@@ -34,43 +36,14 @@ const options: OptionsType = {
 };
 zxcvbnOptions.setOptions(options);
 
-// TESTING ONLY: email@exists.com will return "email exists error"
-
 interface RegisterFormProps {
-  onSuccess: () => void;
+  onSuccess: (result: SignupResult) => void;
 }
 
 export default function RegisterForm({ onSuccess }: RegisterFormProps) {
   const [passwordFeedback, setPasswordFeedback] = useState<FeedbackType | null>(null);
   const [passwordScore, setPasswordScore] = useState<Score>(0);
-
-  const trySubmit = async (data: Yup.InferType<typeof SignupSchema>) => {
-    // artificial sleep timer for debugging transition states
-    // await sleep(4000);
-
-    try {
-      const res = await fetch('/api/register-user', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-
-      const status = res.status;
-      const result = (await res.json()) as RegisterAccountResponsePayload;
-
-      if (status === 200) {
-        if (result.code === 'ok') {
-          onSuccess();
-        } else if (result.code === 'email in use') {
-          setError(AUTH_FORM_FIELDS.EMAIL, {
-            message: 'Email is in use. Try another or log in',
-          });
-        }
-      }
-    } catch (error) {
-      // TODO: create general form error state
-      console.error('error', error);
-    }
-  };
+  const { mutate: signup, status, data } = useAuthApi().signUp;
 
   const {
     register,
@@ -83,6 +56,29 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
     mode: 'onSubmit',
     resolver: yupResolver(SignupSchema),
   });
+
+  useEffect(() => {
+    if (status === 'success') {
+      if (data.signup?.signupResult?.status === 'email in use') {
+        setError(AUTH_FORM_FIELDS.EMAIL, {
+          message: 'Email is in use. Try another or log in',
+        });
+        return;
+      } else if (data.signup?.signupResult?.status === 'ok') {
+        onSuccess(data.signup.signupResult);
+        return;
+      }
+      // server error
+      setError('root', { message: 'An unknown error has occured. Please reload and try again' });
+    }
+  }, [data, setError, status]);
+
+  const trySubmit = async (data: Yup.InferType<typeof SignupSchema>) => {
+    // artificial sleep timer for debugging transition states
+    // await sleep(4000);
+
+    await signup(data as SignupInput);
+  };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const pass = e.currentTarget.value;

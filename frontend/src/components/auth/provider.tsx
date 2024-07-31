@@ -58,7 +58,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       return;
     }
     // reroute FROM public pages if signed in
-    if (isPublicRoute && currentUser?.userId) {
+    if (isPublicRoute && currentUser?.userId && !currentUser?.pauseOnRoute) {
       router.push(PRIVATE_ROUTES.DASHBOARD);
       return;
     }

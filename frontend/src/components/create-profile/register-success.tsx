@@ -1,12 +1,41 @@
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAtom } from 'jotai';
 
 import { COMPANY_NAME, PRIVATE_ROUTES } from '@/constants';
+import { SignupResult } from '@/graphql/generated/graphql';
+import { parseJwt } from '@/utils/utils';
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { useSetCurrentUser } from '../auth/atoms/current-user';
+import { AUTH_TOKEN } from '../auth/types';
 import Button from '../parts/form/button';
 import PageSubtitle from '../parts/page-subtitle';
 import PageTitle from '../parts/page-title';
 
-export default function RegisterSuccess() {
+interface RegisterSuccessProps {
+  result: SignupResult;
+}
+export default function RegisterSuccess({ result }: RegisterSuccessProps) {
+  const [_, setCurrentUser] = useAtom(useSetCurrentUser);
+  const router = useRouter();
+
+  const handleClickNext = () => {
+    localStorage.setItem(AUTH_TOKEN, result.jwtToken);
+    const parsed = parseJwt(result.jwtToken);
+
+    setCurrentUser({
+      userId: parsed.user_id,
+      email: parsed.email,
+      userRole: parsed.user_role,
+      jwt: result.jwtToken,
+      pauseOnRoute: true,
+    });
+
+    router.push(PRIVATE_ROUTES.CREATE_FIRST_PET);
+  };
+
   return (
     <div
       className="p-6 space-y-10 flex justify-center"
@@ -30,9 +59,7 @@ export default function RegisterSuccess() {
           />
           <div>
             <div className="mt-10">
-              <Link href={PRIVATE_ROUTES.DASHBOARD}>
-                <Button primary>Continue to profile setup</Button>
-              </Link>
+              <Button primary onClick={handleClickNext}>Continue to profile setup</Button>
             </div>
           </div>
         </div>
