@@ -21,4 +21,10 @@ export const parseJwt = (token: string) => {
   return JSON.parse(jsonPayload);
 };
 
-export const capitalize = <T extends string>(s: T) => (s[0].toUpperCase() + s.slice(1)) as Capitalize<typeof s>
+export const capitalize = <T extends string>(s: T) =>
+  (s[0].toUpperCase() + s.slice(1)) as Capitalize<typeof s>;
+
+export const getAvatarCompatibleColor = (i: number) => {
+  const colors = ['red', 'orange', 'blue', 'yellow', 'green', 'purple', 'teal'];
+  return colors[i % colors.length];
+};
