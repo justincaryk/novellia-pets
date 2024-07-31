@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS private.record_type (
 CREATE TABLE IF NOT EXISTS private.record (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     pet_id uuid REFERENCES private.pet (id) NOT NULL,
-    owner_id uuid REFERENCES public.user (id) NOT NULL,
+    user_id uuid REFERENCES public.user (id) NOT NULL,
     record_type uuid REFERENCES private.record_type (id) NOT NULL,
     created_at timestamp DEFAULT NOW()
 );
