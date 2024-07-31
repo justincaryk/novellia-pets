@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 
 app.use(postgraphileMiddleware);
 
-app.listen(port, (err?: any) => {
+app.listen(port, (err?: unknown) => {
   if (err) {
     return console.error('Server startup error:', err);
   }
