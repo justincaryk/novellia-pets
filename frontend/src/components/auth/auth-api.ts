@@ -4,9 +4,12 @@ import {
   SigninMutation,
   SignupInput,
   SignupMutation,
+  UpdateUserMutation,
+  UpdateUserMutationVariables,
 } from '../../graphql/generated/graphql';
 import SigninRequest from '../../graphql/mutations/signin';
 import SignupRequest from '../../graphql/mutations/signup';
+import UpdateUserRequest from '../../graphql/mutations/update-user';
 import useGraphQL from '../graphql/useGraphQL';
 
 export function useAuthApi() {
@@ -18,6 +21,10 @@ export function useAuthApi() {
     }),
     signUp: useMutation({
       mutationFn: (data: SignupInput) => graphQLClient.request<SignupMutation>(SignupRequest, data),
+    }),
+    updateUser: useMutation({
+      mutationFn: (data: UpdateUserMutationVariables) =>
+        graphQLClient.request<UpdateUserMutation>(UpdateUserRequest, data),
     }),
   };
 }
