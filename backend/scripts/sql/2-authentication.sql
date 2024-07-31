@@ -139,7 +139,7 @@ BEGIN
         
         -- Generate the JWT token
         SELECT
-            'user' AS role, -- Replace with actual role if needed
+            'role_user' AS role, -- Replace with actual role if needed
             extract(epoch from now() + interval '1 hour')::integer AS exp, -- Expiry time (1 hour from now)
             user_id,
             input_email AS email,
