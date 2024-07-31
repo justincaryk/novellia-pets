@@ -7,7 +7,7 @@ export const PUBLIC_ROUTES = {
 export const PRIVATE_ROUTES = {
   DASHBOARD: '/dashboard',
   UPDATE_NAME: '/update-name',
-  CREATE_FIRST_PET: '/create-first-pet',
+  ADD_FIRST_PET: '/add-first-pet',
 };
 
 export const COMPANY_NAME = 'Novellia Pets';

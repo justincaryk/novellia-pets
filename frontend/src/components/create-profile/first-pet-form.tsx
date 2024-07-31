@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { FormEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,17 +9,23 @@ import * as Yup from 'yup';
 import Button from '@/components/parts/form/button';
 import FormField from '@/components/parts/form/form-field';
 import { PRIVATE_ROUTES } from '@/constants';
+import { Pet } from '@/graphql/generated/graphql';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCurrentUser, useSetCurrentUser } from '../auth/atoms/current-user';
+import { usePetsApi } from '../pets/pets-api';
 import { PET_FORM_FIELDS, PetAddSchema } from './types';
 
-export default function FirstPetForm() {
-  const router = useRouter();
+interface FirstPetFormProps {
+  onSuccess: (pet: Pet) => void;
+}
+export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
   const [_, setCurrentUser] = useAtom(useSetCurrentUser);
   const [currentUser] = useAtom(useCurrentUser);
+  const { data: animals } = usePetsApi().getAnimals;
+  const { mutate: addPet, status, data } = usePetsApi().addPet;
 
-  // pauseOnRoute is only used on initial signup to prevent the auth provider from rerouting to dashboard
-  // which is the only time this view should be rendered
+  // pauseOnRoute is only used immediately after signup to prevent
+  // the auth provider from rerouting directly to dashboard
   useEffect(() => {
     if (currentUser?.pauseOnRoute) {
       setCurrentUser({
@@ -33,6 +38,7 @@ export default function FirstPetForm() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     mode: 'onSubmit',
@@ -40,28 +46,35 @@ export default function FirstPetForm() {
   });
 
   const trySubmit = async (data: Yup.InferType<typeof PetAddSchema>) => {
-    console.log('data: ', data);
-
-    // try {
-    //   const res = await fetch('/api/sign-in', {
-    //     method: 'POST',
-    //     body: JSON.stringify(data),
-    //   });
-
-    //   const status = res.status;
-    //   const result = (await res.json()) as SigninResponsePayload;
-
-    //   if (status === 200) {
-    //     if (result.code === 'ok') {
-    //       // artificial sleep timer for debugging transition states
-    //       // await sleep(1500);
-    //     }
-    //   }
-    // } catch (err) {
-    //   // TODO: set general error
-    //   console.error('error: ', err);
-    // }
+    if (isSubmitting) {
+      return;
+    }
+    console.log('form data: ', data);
+    await addPet({
+      animalId: data.animal,
+      dob: data.dob,
+      name: data.name,
+      userId: currentUser?.userId,
+    });
   };
+
+  useEffect(() => {
+    if (status === 'success') {
+      console.log('result data: ', data);
+      if (!data.createPet?.pet?.id) {
+        setError('root', {
+          message: 'Sorry, something went wrong. Please refresh the page and try again.',
+        });
+      } else {
+        onSuccess(data.createPet.pet as Pet);
+      }
+      return;
+    }
+    // server error
+    if (status === 'error') {
+      setError('root', { message: 'An unknown error has occured. Please reload and try again' });
+    }
+  }, [data, setError, status]);
 
   return (
     <form
@@ -91,23 +104,28 @@ export default function FirstPetForm() {
       <FormField
         label="Pet type"
         placeholder="Pet type"
-        type="text"
         errors={errors.animal}
+        type="select"
         required
+        options={
+          animals?.allAnimals?.nodes.map((animal) => ({
+            text: animal.name,
+            value: animal.id,
+          })) || []
+        }
         {...register(PET_FORM_FIELDS.ANIMAL)}
       />
 
-      {/* TODO: form submit error */}
-      {/* <div className="text-red-error" role="alert">
-            {signinError ? signinError : ''}
-          </div> */}
+      <div className="text-red-error" role="alert">
+        {errors.root ? errors.root.message : ''}
+      </div>
 
       <div className="flex gap-x-4 items-center justify-end">
         <Link href={PRIVATE_ROUTES.UPDATE_NAME} className="w-1/3">
           <Button type="button">Skip</Button>
         </Link>
         <div className="w-2/3">
-          <Button primary type="submit" disabled={isValid} aria-disabled={isValid}>
+          <Button primary type="submit" aria-disabled={!isValid}>
             Continue
           </Button>
         </div>
