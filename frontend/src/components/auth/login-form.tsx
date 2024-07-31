@@ -57,7 +57,7 @@ export default function LoginForm({ onSuccess }: LoginProps) {
         onSuccess();
       }
     }
-  }, [status, data, currentUser, setCurrentUser]);
+  }, [status, data, currentUser, setCurrentUser, onSuccess]);
 
   // failed
   useEffect(() => {

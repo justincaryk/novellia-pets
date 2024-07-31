@@ -58,7 +58,9 @@ export default function RegisterSuccess({ result }: RegisterSuccessProps) {
           />
           <div>
             <div className="mt-10">
-              <Button primary onClick={handleClickNext}>Continue to profile setup</Button>
+              <Button primary onClick={handleClickNext}>
+                Continue to profile setup
+              </Button>
             </div>
           </div>
         </div>

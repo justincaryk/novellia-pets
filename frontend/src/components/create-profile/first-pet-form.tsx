@@ -49,7 +49,9 @@ export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
     if (isSubmitting) {
       return;
     }
+
     console.log('form data: ', data);
+
     await addPet({
       animalId: data.animal,
       dob: data.dob,
@@ -74,7 +76,7 @@ export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
     if (status === 'error') {
       setError('root', { message: 'An unknown error has occured. Please reload and try again' });
     }
-  }, [data, setError, status]);
+  }, [data, setError, status, onSuccess]);
 
   return (
     <form

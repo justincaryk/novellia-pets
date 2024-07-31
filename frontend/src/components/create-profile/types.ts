@@ -36,6 +36,5 @@ export enum PET_FORM_FIELDS {
 export const PetAddSchema = Yup.object().shape({
   name: Yup.string().required("Your pet's name is required"),
   animal: Yup.string().required("Your pet's type is required"),
-  dob: Yup.string().required("Your pet's date of birth is required")
-    
+  dob: Yup.string().required("Your pet's date of birth is required"),
 });

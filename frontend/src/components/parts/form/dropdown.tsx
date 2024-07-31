@@ -33,9 +33,11 @@ const Dropdown = React.forwardRef(
         className={classes}
         aria-invalid={errors?.message ? 'true' : 'false'}
         {...rest}
-        defaultValue={""}
+        defaultValue={''}
       >
-        <option value="" disabled>{placeholder}</option>
+        <option value="" disabled>
+          {placeholder}
+        </option>
         {options?.map((opt) => (
           <option
             className="block px-4 py-2 text-sm text-gray-700"

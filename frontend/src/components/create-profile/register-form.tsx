@@ -71,7 +71,7 @@ export default function RegisterForm({ onSuccess }: RegisterFormProps) {
       // server error
       setError('root', { message: 'An unknown error has occured. Please reload and try again' });
     }
-  }, [data, setError, status]);
+  }, [data, setError, status, onSuccess]);
 
   const trySubmit = async (data: Yup.InferType<typeof SignupSchema>) => {
     // artificial sleep timer for debugging transition states

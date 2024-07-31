@@ -27,7 +27,7 @@ interface BaseFormFieldProps {
 }
 
 interface InputFormFieldProps extends BaseFormFieldProps, InputHTMLAttributes<HTMLInputElement> {
-  type: 'input' | 'password' | 'text' | 'date';
+  type: 'input' | 'password' | 'text' | 'date' | 'email';
   name: string;
 }
 
