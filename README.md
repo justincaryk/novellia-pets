@@ -37,9 +37,9 @@ docker build
 
 5. Docker Profiles have been set up for the frontend and backend directories. The db is always configured to run. Choose which best suits your development requirements:
 
-- To spin up nextapp and db only: `docker compose --profile nextapp up`
+- To spin up nextapp and db only: `docker compose --profile frontend up`
 - To spin up backend and db only: `docker compose --profile backend up`
-- To spin up the whole app: `docker compose --profile backend --profile nextapp up`
+- To spin up the whole app: `docker compose --profile backend --profile frontend up`
 
 If you want to run these in a detached state, you can append the `-d` flag to the end of the commands above, which will free up the terminal window.
 
@@ -52,9 +52,10 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 ### TODO
 
 **Backend**
-- [] write sql for schema init
-- [] write row level security 
-- [] write sql for seeding db
+- [x] write sql for schema init
+- [x] write row level security 
+- [x] write sql for seeding db
+- [] revise schema if needed
 
 **Frontend**
 - [] update signup & signin api calls on front end
