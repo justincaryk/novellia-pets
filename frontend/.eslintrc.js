@@ -12,7 +12,8 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: process.env.NODE_ENV === 'docker' ? './tsconfig.json' : './frontend/tsconfig.json',
+    project:
+      process.env.NODE_ENV !== 'development' ? './tsconfig.json' : './frontend/tsconfig.json',
     ecmaFeatures: {
       jsx: true,
     },
