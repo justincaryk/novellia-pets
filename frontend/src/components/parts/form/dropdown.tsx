@@ -39,9 +39,6 @@ const Dropdown = React.forwardRef(
         {options?.map((opt) => (
           <option
             className="block px-4 py-2 text-sm text-gray-700"
-            role="menuitem"
-            tabIndex={-1}
-            style={{ textTransform: 'capitalize' }}
             value={opt.value}
             key={opt.value}
           >
