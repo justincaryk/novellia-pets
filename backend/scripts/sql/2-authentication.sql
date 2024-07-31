@@ -18,6 +18,20 @@ BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM pg_catalog.pg_roles
+        WHERE rolname = 'role_admin'
+    ) THEN
+        CREATE ROLE role_admin;
+        RAISE NOTICE 'Role "role_admin" created.';
+    ELSE
+        RAISE NOTICE 'Role "role_admin" already exists. Skipping creation.';
+    END IF;
+END $do$;
+
+DO $do$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_catalog.pg_roles
         WHERE rolname = 'anonymous_user'
     ) THEN
         CREATE ROLE anonymous_user;
@@ -32,8 +46,8 @@ DO $do$
 BEGIN
     IF NOT EXISTS (
         SELECT 1
-        FROM pg_available_extensions
-        WHERE name = 'uuid-ossp'
+        FROM pg_extension
+        WHERE extname = 'uuid-ossp'
     ) THEN
         CREATE EXTENSION "uuid-ossp";
         RAISE NOTICE 'Extension "uuid-ossp" created.';
@@ -46,8 +60,8 @@ DO $do$
 BEGIN
     IF NOT EXISTS (
         SELECT 1
-        FROM pg_available_extensions
-        WHERE name = 'pgcrypto'
+        FROM pg_extension
+        WHERE extname = 'pgcrypto'
     ) THEN
         CREATE EXTENSION pgcrypto;
         RAISE NOTICE 'Extension "pgcrypto" created.';
@@ -75,7 +89,9 @@ END $do$;
 CREATE TABLE IF NOT EXISTS public.user (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     password text,
-    user_name varchar(50) NOT NULL,
+    user_name varchar(150) NOT NULL,
+    first_name varchar (75),
+    last_name varchar (75),
     role user_role DEFAULT 'user',
     CONSTRAINT core_user_name_key UNIQUE (user_name)
 );
@@ -113,6 +129,16 @@ BEGIN
         ));';
     RAISE NOTICE 'Policy "policy_users" created.';
 END $do$;
+
+CREATE TYPE public.jwt_token AS (
+    ROLE text, --db role of the user
+    exp integer, --expiry date as the unix epoch
+    user_id uuid, --db identifier of the user
+    user_name varchar(150), -- username for sign in, email ideally
+    first_name varchar (75), --display name first
+    last_name_name varchar (75), --display name last
+    user_role user_role --user role as referenceable enum
+);
 
 -- Define functions
 CREATE OR REPLACE FUNCTION signup (email varchar(50), password varchar(50))

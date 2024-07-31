@@ -1,11 +1,13 @@
+### Rough draft
 ```sql
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+-- Use DBML to define your database structure
+-- Docs: https://dbml.dbdiagram.io/docs
 
 Table user {
   id uuid
   email varchar(100)
-  name varchar(100)
+  first_name varchar(75)
+  last_name varchar(75)
   password varchar(255)
   created_at timestamp
 }
@@ -23,8 +25,6 @@ Table animal {
   id uuid
   type varchar(50)
 }
-// seed with: dog, cat, fish, ferret,
-// bird, reptile, rabit, hamster, guinea pig,
 
 Ref: pet.owner_id > user.id // many-to-one
 Ref: pet.animal_id > animal.id
@@ -65,19 +65,57 @@ Table allergy_record {
 }
 
 Ref: allergy_record.record_id > record.id
+```
 
-// creating a new record type
 
-// 1. create a new table
-// CREATE TABLE medication_record (
-//     id SERIAL PRIMARY KEY,
-//     record_id INTEGER NOT NULL,
-//     medication_name VARCHAR(255) NOT NULL,
-//     dosage VARCHAR(50),
-//     frequency VARCHAR(50),
-//     FOREIGN KEY (record_id) REFERENCES record(id)
-// );
+### Creating a new record type
 
-// 2. insert a new row in the record_type Table
-// INSERT INTO record_type (name) VALUES ('lab result');
+1. Create a new table
+
+```sql
+CREATE TABLE visit_record (
+    id SERIAL PRIMARY KEY,
+    record_id INTEGER NOT NULL,
+    visit_date timestamp NOT NULL,
+    reason text,
+    FOREIGN KEY (record_id) REFERENCES record(id)
+);
+```
+
+2. Insert a new row in the record_type Table
+
+```sql
+INSERT INTO record_type (name) VALUES ([TABLE VAL]);
+```
+
+3. Create security policies
+
+USER
+
+```sql
+ALTER TABLE private.[TABLE] ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY [TABLE]_user_policy ON private.[TABLE] 
+    TO role_user
+    USING (
+        EXISTS (
+            SELECT 1
+            FROM private.record r
+            WHERE r.id = private.allergy_record.record_id
+              AND r.owner_id = current_setting('jwt.claims.user_id')::uuid
+        )
+    );
+    
+GRANT SELECT, INSERT, UPDATE, DELETE ON private.[TABLE] TO role_user;
+```
+
+ADMIN
+
+```sql
+CREATE POLICY admin_access_[TABLE]_policy on private.[TABLE]
+    TO role_admin USING (true) WITH CHECK (true);
+
+GRANT ALL on schema private to role_admin;
+
+GRANT SELECT ON ALL TABLES IN SCHEMA private TO role_admin;
 ```
