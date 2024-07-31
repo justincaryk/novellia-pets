@@ -16,8 +16,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // 1. email@exists.com will return "ok" and move forward
 // 2. email@no-exist.com will return "not found"
 // 3. all other will return "invalid credentials"
-
-console.log('remove me dude! debug');
 interface LoginProps {
   onSuccess: () => void;
 }
