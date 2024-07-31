@@ -2,10 +2,11 @@ import {
   AddPetMutation,
   AddPetMutationVariables,
   AllAnimalsQuery,
+  AllPetsQuery,
 } from '@/graphql/generated/graphql';
-
-import GetAnimalRequest from '@/graphql/queries/all-animals';
 import CreatePetRequest from '@/graphql/mutations/create-pet';
+import GetAnimalRequest from '@/graphql/queries/all-animals';
+import GetAllPetsRequest from '@/graphql/queries/all-pets';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useGraphQL from '../graphql/useGraphQL';
 import { staticQueryConfig } from '../react-query/defaults';
@@ -25,11 +26,11 @@ export function usePetsApi() {
       queryFn: async () => graphQLClient.request<AllAnimalsQuery>(GetAnimalRequest),
       ...staticQueryConfig,
     }),
-    // getPets: useQuery({
-    //   queryKey: [ FEATURES_QUERY_KEYS.FEATURES_DATA ],
-    //   queryFn: async () => graphQLClient.request<FeatureRelationDataQuery>(GetFeaturesRelationDataRequest),
-    //   ...staticQueryConfig,
-    // }),
+    getPets: useQuery({
+      queryKey: [FEATURES_QUERY_KEYS.PETS],
+      queryFn: async () => graphQLClient.request<AllPetsQuery>(GetAllPetsRequest),
+      ...staticQueryConfig,
+    }),
     addPet: useMutation({
       mutationFn: (data: AddPetMutationVariables) =>
         graphQLClient.request<AddPetMutation>(CreatePetRequest, data),

@@ -7,8 +7,14 @@ export default gql`
       nodes {
         id
         name
-        userId
         dob
+        userId
+        animalId
+        animalByAnimalId {
+          id
+          name
+          nodeId
+        }
         nodeId
       }
     }
