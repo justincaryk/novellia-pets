@@ -108,7 +108,7 @@ export default function Dashboard() {
 
             {/* pet record summary */}
             <div className="flex justify-between w-full align-center">
-              <div className="font-bold text-2xl">Records</div>
+              <div className="font-bold text-2xl">{addRecordFormActive ? 'Add new record': 'Records'}</div>
               <div>
                 <Button
                   type="button"
