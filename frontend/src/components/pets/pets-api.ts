@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useGraphQL from '../graphql/useGraphQL';
 import { staticQueryConfig } from '../react-query/defaults';
 
-export enum FEATURES_QUERY_KEYS {
+export enum PET_QUERY_KEYS {
   PETS = 'pets',
   ANIMALS = 'animals',
 }
@@ -22,12 +22,12 @@ export function usePetsApi() {
 
   return {
     getAnimals: useQuery({
-      queryKey: [FEATURES_QUERY_KEYS.ANIMALS],
+      queryKey: [PET_QUERY_KEYS.ANIMALS],
       queryFn: async () => graphQLClient.request<AllAnimalsQuery>(GetAnimalRequest),
       ...staticQueryConfig,
     }),
     getPets: useQuery({
-      queryKey: [FEATURES_QUERY_KEYS.PETS],
+      queryKey: [PET_QUERY_KEYS.PETS],
       queryFn: async () => graphQLClient.request<AllPetsQuery>(GetAllPetsRequest),
       ...staticQueryConfig,
     }),
@@ -36,7 +36,7 @@ export function usePetsApi() {
         graphQLClient.request<AddPetMutation>(CreatePetRequest, data),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [FEATURES_QUERY_KEYS.PETS],
+          queryKey: [PET_QUERY_KEYS.PETS],
         });
       },
     }),
@@ -45,7 +45,7 @@ export function usePetsApi() {
     //       graphQLClient.request<UpdateFeatureRefsByIdMutation>(UpdateFeatureRefsByIdRequest, data),
     //     onSuccess: () => {
     //       queryClient.invalidateQueries({
-    //         queryKey: [ FEATURES_QUERY_KEYS.FEATURES ],
+    //         queryKey: [ PET_QUERY_KEYS.FEATURES ],
     //       })
     //     },
     //   }),
