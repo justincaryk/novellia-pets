@@ -8,28 +8,13 @@ import * as Yup from 'yup';
 import Button from '@/components/parts/form/button';
 import FormField from '@/components/parts/form/form-field';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCurrentUser, useSetCurrentUser } from '../auth/atoms/current-user';
 import { AllergyFormSchema, RECORD_FORM_FIELDS } from './types';
 
 interface AddAllergyFormProps {
   onSuccess: (data: Yup.InferType<typeof AllergyFormSchema>) => void;
 }
 export default function AddAllergyForm({ onSuccess }: AddAllergyFormProps) {
-  const [_, setCurrentUser] = useAtom(useSetCurrentUser);
-  const [currentUser] = useAtom(useCurrentUser);
-
-  // pauseOnRoute is only used immediately after signup to prevent
-  // the auth provider from rerouting directly to dashboard
-  useEffect(() => {
-    if (currentUser?.pauseOnRoute) {
-      setCurrentUser({
-        ...currentUser,
-        pauseOnRoute: false,
-      });
-    }
-  }, [currentUser, setCurrentUser]);
-
-  // base form code
+  
   const {
     register,
     handleSubmit,

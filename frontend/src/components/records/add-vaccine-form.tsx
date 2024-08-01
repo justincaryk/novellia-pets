@@ -1,6 +1,5 @@
 'use client';
 
-import { useAtom } from 'jotai';
 import { FormEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
@@ -8,31 +7,17 @@ import * as Yup from 'yup';
 import Button from '@/components/parts/form/button';
 import FormField from '@/components/parts/form/form-field';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCurrentUser, useSetCurrentUser } from '../auth/atoms/current-user';
 import { RECORD_FORM_FIELDS, VaccineFormSchema } from './types';
 
 interface AddRecordFormProps {
   onSuccess: (data: Yup.InferType<typeof VaccineFormSchema>) => void;
 }
 export default function AddVaccineForm({ onSuccess }: AddRecordFormProps) {
-  const [_, setCurrentUser] = useAtom(useSetCurrentUser);
-  const [currentUser] = useAtom(useCurrentUser);
-
-  // pauseOnRoute is only used immediately after signup to prevent
-  // the auth provider from rerouting directly to dashboard
-  useEffect(() => {
-    if (currentUser?.pauseOnRoute) {
-      setCurrentUser({
-        ...currentUser,
-        pauseOnRoute: false,
-      });
-    }
-  }, [currentUser, setCurrentUser]);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(VaccineFormSchema),
