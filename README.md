@@ -59,14 +59,17 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 
 **Frontend**
 - [x] update signup & signin api calls on front end
+- [x] add a pet view
+- [x] new record forms
 - [] admin dashboard view
    - [] view pets
    - [] view 
 - [] user dashboard view
-- [] add a pet view
-- [] new record forms
+- [] bg does not extend full page on dash
+- [] dropdown needs to work with keyboard
 - [] first-pet-form > proper max date validation
 - [] dashboard > mobile responsive
+- [] dashboard > refactor
 - [] search TODOs
 
 **Dealer's Choice**
