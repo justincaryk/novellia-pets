@@ -59,8 +59,8 @@ export default function AddAllergyForm({ onSuccess }: AddAllergyFormProps) {
         type="select"
         errors={errors.severity}
         options={[
-          { text: 'mild', value: 'mild' },
-          { text: 'servere', value: 'severe' },
+          { text: 'mild', value: 'MILD' },
+          { text: 'servere', value: 'SEVERE' },
         ]}
         required
         {...register(RECORD_FORM_FIELDS.SEVERITY)}

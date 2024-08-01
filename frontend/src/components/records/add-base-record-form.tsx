@@ -105,6 +105,7 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
       if (baseStatus === 'success') {
         if (isRelatedRecordType('allergy')) {
           await addAllergyRecord({
+            recordId: baseRecordData.createRecord?.record?.id || '',
             ...allergyFormValues,
             // enums need to be passed in all uppers
             severity: allergyFormValues?.severity.toUpperCase(),
