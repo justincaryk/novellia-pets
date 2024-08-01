@@ -38,16 +38,10 @@ export function usePetsApi() {
         queryClient.invalidateQueries({
           queryKey: [PET_QUERY_KEYS.PETS],
         });
+        queryClient.refetchQueries({
+          queryKey: [PET_QUERY_KEYS.PETS],
+        });
       },
     }),
-    // updatePet: useMutation({
-    //     mutationFn: (data: UpdateFeatureRefsByIdMutationVariables) =>
-    //       graphQLClient.request<UpdateFeatureRefsByIdMutation>(UpdateFeatureRefsByIdRequest, data),
-    //     onSuccess: () => {
-    //       queryClient.invalidateQueries({
-    //         queryKey: [ PET_QUERY_KEYS.FEATURES ],
-    //       })
-    //     },
-    //   }),
   };
 }
