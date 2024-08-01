@@ -12,6 +12,7 @@ import AddRecordForm from '@/components/records/add-base-record-form';
 import { useRecordsApi } from '@/components/records/records-api';
 import { MungedPetRecord } from '@/components/records/types';
 import { getAvatarCompatibleColor, getSuitableAnimalAvatar } from '@/utils/utils';
+import { BeakerIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 // this causes errors during server hydration and must be dynamically imported
 const Animal = dynamic(() => import('react-animals'), { ssr: false });
@@ -33,6 +34,7 @@ export default function Dashboard() {
 
   const handlePetClick = (pet: PetWithAnimal, i: number) => {
     setActivePet(pet);
+    toggleAddRecordFormActive(false);
     setActiveColorIndex(i);
   };
 
@@ -51,7 +53,7 @@ export default function Dashboard() {
             userId: record.userId,
             petId: record.petId,
             recordType: record.recordType,
-            createdAt: record.createdAt,
+            createdAt: new Date(record.createdAt),
             type: 'allergy',
             name: allergyRecord.name,
             reactions: allergyRecord.reactions,
@@ -78,7 +80,7 @@ export default function Dashboard() {
     }
 
     return collated;
-  }, [petRecords?.petById?.recordsByPetId.nodes]);
+  }, [petRecords]);
 
   const checkShouldShowEmptyRecordMsg = () => {
     const mungedRecordsHaveData = activePetRecords.length === 0;
@@ -137,7 +139,8 @@ export default function Dashboard() {
           </div>
 
           {/* pet detail container (2/3) */}
-          <div className="col-span-2 bg-white w-full space-y-4 p-4 shadow shadow-slate-200">
+          <div className="col-span-2 bg-white w-full space-y-6 p-4 shadow shadow-slate-200">
+            
             {/* container title */}
             <div className="flex justify-between align-middle border-b pb-2">
               {/* name and avatar */}
@@ -162,7 +165,7 @@ export default function Dashboard() {
             </div>
 
             {/* pet record summary */}
-            <div className="flex justify-between w-full align-center">
+            <div className="flex justify-between w-full items-center">
               <div className="font-bold text-2xl">
                 {addRecordFormActive ? 'Add new record' : 'Records'}
               </div>
@@ -185,18 +188,34 @@ export default function Dashboard() {
 
             {/* records list */}
             {!addRecordFormActive && activePetRecords.length ? (
-              <div className="space-y-2">
-                {activePetRecords.map((record) => {
-                  return (
-                    <div key={record.recordId} className="flex gap-x-2">
-                      <div className="font-bold">{record.name}</div>
-                      <div>({record.type})</div>
-                      <div>{record.administeredAt?.toDateString()}</div>
-                      <div>{record.reactions}</div>
-                      <div>{record.severity}</div>
-                    </div>
-                  );
-                })}
+              <div className="space-y-4">
+                {activePetRecords
+                  .sort((a, b) => {
+                    console.log('a,b: ', {
+                      a: a.createdAt.valueOf(),
+                      b: b.createdAt.valueOf(),
+                    });
+                    return a.createdAt.valueOf() - b.createdAt.valueOf();
+                  })
+                  .map((record) => {
+                    return (
+                      <div key={record.recordId} className="flex gap-x-2">
+                        {record.type === 'vaccine' ? (
+                          <BeakerIcon color="blue" width={'25px'} />
+                        ) : null}
+                        {record.type === 'allergy' ? (
+                          <SparklesIcon color="green" width={'25px'} />
+                        ) : null}
+                        <div className="font-bold">{record.name}</div>
+                        <div>({record.type}):</div>
+                        {record.administeredAt ? (
+                          <div>Adminstered: {record.administeredAt?.toDateString()}</div>
+                        ) : null}
+                        {record.severity ? <div>Severity: {record.severity}</div> : null}
+                        {record.reactions ? <div>Reactions: {record.reactions}</div> : null}
+                      </div>
+                    );
+                  })}
               </div>
             ) : null}
 

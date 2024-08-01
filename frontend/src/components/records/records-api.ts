@@ -48,9 +48,7 @@ export function useRecordsApi(activePetId?: string) {
     addRecordForPet: useMutation({
       mutationFn: (data: CreateRecordMutationVariables) =>
         graphQLClient.request<CreateRecordMutation>(CreatePetRecordRequest, data),
-      // onSuccess: (responseData) => {
-      //   return responseData;
-      // },
+      onSuccess: () => {},
     }),
     addVaccineRecordForPet: useMutation({
       mutationFn: (data: CreateVaccineRecordMutationVariables) =>
@@ -59,6 +57,9 @@ export function useRecordsApi(activePetId?: string) {
         queryClient.invalidateQueries({
           queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
         });
+        queryClient.refetchQueries({
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
+        });
       },
     }),
     addAllergyRecordForPet: useMutation({
@@ -66,7 +67,10 @@ export function useRecordsApi(activePetId?: string) {
         graphQLClient.request<CreateAllergyRecordMutation>(CreatePetAllergyRecordRequest, data),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
+        });
+        queryClient.refetchQueries({
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
         });
       },
     }),
