@@ -7,7 +7,7 @@ import reportAccessibility from '@/utils/report-accessibility';
 
 function PrivateLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative h-screen bg-slate-50">
+    <div className="relative bg-slate-50 min-h-screen">
       <div className="w-full flex justify-center items-center py-2" role="banner">
         <div className="font-bold text-6xl text-blue-dark">{COMPANY_NAME}</div>
         <div className="rounded-full bg-blue-dark ml-2 p-1">
