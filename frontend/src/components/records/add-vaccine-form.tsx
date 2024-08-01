@@ -13,7 +13,6 @@ interface AddRecordFormProps {
   onSuccess: (data: Yup.InferType<typeof VaccineFormSchema>) => void;
 }
 export default function AddVaccineForm({ onSuccess }: AddRecordFormProps) {
-
   const {
     register,
     handleSubmit,
@@ -53,7 +52,9 @@ export default function AddVaccineForm({ onSuccess }: AddRecordFormProps) {
           {...register(RECORD_FORM_FIELDS.ADMINISTERED_AT)}
         />
 
-        <Button primary type="submit">Save New Record</Button>
+        <Button primary type="submit">
+          Save New Record
+        </Button>
       </form>
     </div>
   );

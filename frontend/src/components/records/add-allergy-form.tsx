@@ -13,7 +13,6 @@ interface AddAllergyFormProps {
   onSuccess: (data: Yup.InferType<typeof AllergyFormSchema>) => void;
 }
 export default function AddAllergyForm({ onSuccess }: AddAllergyFormProps) {
-  
   const {
     register,
     handleSubmit,
@@ -67,7 +66,9 @@ export default function AddAllergyForm({ onSuccess }: AddAllergyFormProps) {
         {...register(RECORD_FORM_FIELDS.SEVERITY)}
       />
 
-      <Button primary type="submit">Save New Record</Button>
+      <Button primary type="submit">
+        Save New Record
+      </Button>
     </form>
   );
 }
