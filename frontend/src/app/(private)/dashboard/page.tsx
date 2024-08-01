@@ -140,7 +140,6 @@ export default function Dashboard() {
 
           {/* pet detail container (2/3) */}
           <div className="col-span-2 bg-white w-full space-y-6 p-4 shadow shadow-slate-200">
-            
             {/* container title */}
             <div className="flex justify-between align-middle border-b pb-2">
               {/* name and avatar */}
