@@ -2611,6 +2611,8 @@ export type RecordsByAnimalIdQuery = {
       nodes: Array<{
         __typename?: 'Record';
         id: any;
+        userId: any;
+        petId: any;
         recordType: any;
         createdAt?: any;
         allergyRecordsByRecordId: {
@@ -2625,7 +2627,12 @@ export type RecordsByAnimalIdQuery = {
         };
         vaccineRecordsByRecordId: {
           __typename?: 'VaccineRecordsConnection';
-          nodes: Array<{ __typename?: 'VaccineRecord'; id: any; administeredAt: any }>;
+          nodes: Array<{
+            __typename?: 'VaccineRecord';
+            id: any;
+            name: string;
+            administeredAt: any;
+          }>;
         };
       }>;
     };

@@ -97,7 +97,7 @@ export default function UserNameForm({ onSuccess }: UpdateUserFormProps) {
           <Button type="button">Skip</Button>
         </Link>
         <div className="w-2/3">
-          <Button primary type="submit" disabled={isValid} aria-disabled={isValid}>
+          <Button primary type="submit" aria-disabled={!isValid}>
             Continue
           </Button>
         </div>

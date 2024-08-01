@@ -22,14 +22,22 @@ export enum RECORDS_QUERY_KEYS {
   RECORD_TYPES = 'record_types',
 }
 
-export function useRecordsApi() {
+export function useRecordsApi(activePetId?: string) {
   const { graphQLClient } = useGraphQL();
   const queryClient = useQueryClient();
 
   return {
     getRecordsByPetId: useQuery({
-      queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
-      queryFn: async () => graphQLClient.request<RecordsByAnimalIdQuery>(GetAllPetRecordsRequest),
+      queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
+      queryFn: async () => {
+        if (activePetId) {
+          return graphQLClient.request<RecordsByAnimalIdQuery>(GetAllPetRecordsRequest, {
+            petId: activePetId,
+          });
+        }
+
+        return null;
+      },
       ...staticQueryConfig,
     }),
     getRecordTypes: useQuery({
@@ -40,9 +48,7 @@ export function useRecordsApi() {
     addRecordForPet: useMutation({
       mutationFn: (data: CreateRecordMutationVariables) =>
         graphQLClient.request<CreateRecordMutation>(CreatePetRecordRequest, data),
-      // onSuccess: (responseData) => {
-      //   return responseData;
-      // },
+      onSuccess: () => {},
     }),
     addVaccineRecordForPet: useMutation({
       mutationFn: (data: CreateVaccineRecordMutationVariables) =>
@@ -51,6 +57,9 @@ export function useRecordsApi() {
         queryClient.invalidateQueries({
           queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
         });
+        queryClient.refetchQueries({
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
+        });
       },
     }),
     addAllergyRecordForPet: useMutation({
@@ -58,7 +67,10 @@ export function useRecordsApi() {
         graphQLClient.request<CreateAllergyRecordMutation>(CreatePetAllergyRecordRequest, data),
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
+        });
+        queryClient.refetchQueries({
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
         });
       },
     }),

@@ -24,7 +24,7 @@ export default function UserNamePage() {
       ) : (
         <div className="space-y-10">
           <div>
-            <PageTitle text={'Add your first wonderful animal!'} />
+            <PageTitle text={'Tell us about your wonderful pet!'} />
             <PageSubtitle text={'You can change these details and more pets later.'} />
           </div>
 
