@@ -2556,6 +2556,29 @@ export type UpdateUserMutation = {
   };
 };
 
+export type AllAdminPetsQueryVariables = Exact<{
+  userId: Scalars['UUID']['input'];
+}>;
+
+export type AllAdminPetsQuery = {
+  __typename?: 'Query';
+  allPets?: {
+    __typename?: 'PetsConnection';
+    totalCount: number;
+    nodes: Array<{
+      __typename?: 'Pet';
+      id: any;
+      name: string;
+      dob: any;
+      userId: any;
+      animalId: any;
+      createdAt?: any;
+      nodeId: string;
+      animalByAnimalId?: { __typename?: 'Animal'; id: any; name: string; nodeId: string };
+    }>;
+  };
+};
+
 export type AllAnimalsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllAnimalsQuery = {
