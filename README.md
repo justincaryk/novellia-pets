@@ -71,6 +71,7 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 - [] dashboard > mobile responsive
 - [] dashboard > refactor
 - [] search TODOs
+- [] currentUser should be extended with a fetch request to the user doc to get firstname, lastname
 
 **Dealer's Choice**
 - [] one more feature that is cool
