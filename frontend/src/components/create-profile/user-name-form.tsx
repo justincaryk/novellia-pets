@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { FormEvent, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -9,9 +8,7 @@ import * as Yup from 'yup';
 
 import Button from '@/components/parts/form/button';
 import FormField from '@/components/parts/form/form-field';
-import PageSubtitle from '@/components/parts/page-subtitle';
-import PageTitle from '@/components/parts/page-title';
-import SkipLink from '@/components/parts/skip-link';
+// import SkipLink from '@/components/parts/skip-link';
 import { PRIVATE_ROUTES } from '@/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCurrentUser } from '../auth/atoms/current-user';
@@ -22,7 +19,6 @@ interface UpdateUserFormProps {
   onSuccess: () => void;
 }
 export default function UserNameForm({ onSuccess }: UpdateUserFormProps) {
-  const router = useRouter();
   const { mutate: updateUser, status, data } = useAuthApi().updateUser;
   const [currentUser] = useAtom(useCurrentUser);
   const {
@@ -53,7 +49,6 @@ export default function UserNameForm({ onSuccess }: UpdateUserFormProps) {
 
   useEffect(() => {
     if (status === 'success') {
-      console.log('result data: ', data);
       if (!data.updateUserById?.user?.id) {
         setError('root', {
           message: 'Sorry, something went wrong. Please refresh the page and try again.',

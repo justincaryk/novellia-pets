@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
@@ -87,14 +87,17 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
     return;
   };
 
-  const isRelatedRecordType = (comparisonStr: string) => {
-    const recordTypeId = getValues().recordType;
-    const recordType = recordTypes?.allRecordTypes?.nodes.find((rc) => rc.id === recordTypeId);
-    if (recordType?.name === comparisonStr) {
-      return true;
-    }
-    return false;
-  };
+  const isRelatedRecordType = useCallback(
+    (comparisonStr: string) => {
+      const recordTypeId = getValues().recordType;
+      const recordType = recordTypes?.allRecordTypes?.nodes.find((rc) => rc.id === recordTypeId);
+      if (recordType?.name === comparisonStr) {
+        return true;
+      }
+      return false;
+    },
+    [getValues, recordTypes],
+  );
 
   // with record id, submit the core record field
   useEffect(() => {
@@ -122,14 +125,22 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
     executeAsyncTasks().catch((error) => {
       console.error('Error in executeAsyncTasks:', error);
     });
-  }, [baseStatus]);
+  }, [
+    baseStatus,
+    addAllergyRecord,
+    addVaccineRecord,
+    isRelatedRecordType,
+    baseRecordData,
+    allergyFormValues,
+    vaccineFormValues,
+  ]);
 
   // finally, we can call it quits
   useEffect(() => {
     if (vaxSubStatus === 'success' || allergySubStatus === 'success') {
       onSuccess();
     }
-  }, [vaxSubStatus, allergySubStatus]);
+  }, [vaxSubStatus, allergySubStatus, onSuccess]);
 
   const isLoading = useMemo(() => {
     if (baseStatus == 'pending' || baseStatus === 'success') {
@@ -157,6 +168,15 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
             console.log('oka... overlay');
             e.stopPropagation();
           }}
+          onKeyDown={(e) => {
+            if (e.key.toLowerCase() === 'enter') {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
+          role="presentation"
+          aria-live="polite"
+          title="Adding the new pet record"
         >
           <div className="text-4xl font-bold">LOADING...</div>
         </div>
@@ -170,31 +190,25 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
           onSubmit={(e: FormEvent) => void handleSubmit(trySubmitBase)(e)}
           noValidate
         >
-          <div
-            onClick={() => {
-              console.log('oka... elemt');
+          <FormField
+            label="Record type"
+            placeholder="Record Type"
+            type="select"
+            errors={errors.recordType}
+            options={
+              recordTypes?.allRecordTypes?.nodes.map((recordType) => ({
+                text: recordType.name,
+                value: recordType.id,
+              })) || []
+            }
+            required
+            {...register(RECORD_FORM_FIELDS.RECORD_TYPE)}
+            onChange={(e) => {
+              setValue(RECORD_FORM_FIELDS.RECORD_TYPE, e.currentTarget.value, {
+                shouldValidate: true,
+              });
             }}
-          >
-            <FormField
-              label="Record type"
-              placeholder="Record Type"
-              type="select"
-              errors={errors.recordType}
-              options={
-                recordTypes?.allRecordTypes?.nodes.map((recordType) => ({
-                  text: recordType.name,
-                  value: recordType.id,
-                })) || []
-              }
-              required
-              {...register(RECORD_FORM_FIELDS.RECORD_TYPE)}
-              onChange={(e) => {
-                setValue(RECORD_FORM_FIELDS.RECORD_TYPE, e.currentTarget.value, {
-                  shouldValidate: true,
-                });
-              }}
-            />
-          </div>
+          />
         </form>
 
         {isValid && isRelatedRecordType('allergy') ? (

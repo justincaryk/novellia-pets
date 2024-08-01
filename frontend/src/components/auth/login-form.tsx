@@ -1,7 +1,5 @@
 'use client';
 
-import { SigninResponsePayload } from '@/types';
-
 import { useAtom } from 'jotai';
 import { FormEvent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

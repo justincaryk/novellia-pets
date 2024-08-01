@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import Button from '@/components/parts/form/button';
 import PageTitle from '@/components/parts/page-title';
-import SkipLink from '@/components/parts/skip-link';
+// import SkipLink from '@/components/parts/skip-link';
 import { usePetsApi } from '@/components/pets/pets-api';
 import { PetWithAnimal } from '@/components/pets/types';
 import AddRecordForm from '@/components/records/add-base-record-form';
@@ -21,14 +21,12 @@ export default function Dashboard() {
   const { data: pets } = usePetsApi().getPets;
   const [addRecordFormActive, toggleAddRecordFormActive] = useState(false);
 
-  const onAddPetClick = (e: unknown) => {};
-
   useEffect(() => {
     if (pets?.allPets?.nodes.length && !activePet) {
       setActivePet(pets.allPets.nodes[0] as PetWithAnimal);
       setActiveColorIndex(0);
     }
-  }, [pets]);
+  }, [pets, activePet]);
 
   const handlePetClick = (pet: PetWithAnimal, i: number) => {
     setActivePet(pet);
@@ -49,7 +47,7 @@ export default function Dashboard() {
         <div className="w-full border p-6 bg-white rounded-md shadow shadow-slate-200">
           {/* add pet button, update user record */}
 
-          <Button type="button" onClick={onAddPetClick} className="w-auto">
+          <Button type="button" onClick={() => {}} className="w-auto">
             + Add pet
           </Button>
         </div>
@@ -63,7 +61,13 @@ export default function Dashboard() {
                 key={pet.id}
                 className="flex gap-x-2 cursor-pointer align-middle rounded p-2 hover:bg-slate-200"
                 role="button"
+                tabIndex={-1}
                 onClick={() => handlePetClick(pet as PetWithAnimal, i)}
+                onKeyDown={(e) => {
+                  if (e.key.toLowerCase() === 'enter') {
+                    handlePetClick(pet as PetWithAnimal, i);
+                  }
+                }}
               >
                 <Animal
                   name={getSuitableAnimalAvatar(pet.animalByAnimalId?.name || '')}
