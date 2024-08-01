@@ -58,13 +58,16 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 - [] revise schema if needed
 
 **Frontend**
-- [] update signup & signin api calls on front end
+- [x] update signup & signin api calls on front end
 - [] admin dashboard view
    - [] view pets
    - [] view 
 - [] user dashboard view
 - [] add a pet view
 - [] new record forms
+- [] first-pet-form > proper max date validation
+- [] dashboard > mobile responsive
+- [] search TODOs
 
 **Dealer's Choice**
 - [] one more feature that is cool
@@ -98,9 +101,8 @@ DB:
 - pretty easily extend new record types by creating a basic many to many lookup table.
 - to extend just add private.record_type + add a new table
 
-
-
-- security
+Security:
+  - CORS is configured for all at the moment, but should be configured to specific known origins 
   - admin has read only for all but pets.
   - private.pet.owner_name 
     - added so admins dont need access to user records

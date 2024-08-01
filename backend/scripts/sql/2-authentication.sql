@@ -100,26 +100,6 @@ CREATE POLICY policy_users ON public.user
     USING (email = CURRENT_USER);
 
 -- Define functions
-CREATE OR REPLACE FUNCTION public.signup (input_email varchar(150), input_password varchar(50))
-RETURNS boolean AS $$
-DECLARE
-    result varchar DEFAULT NULL;
-BEGIN
-    SELECT email
-    FROM public.user
-    WHERE email = input_email INTO result;
-    IF NOT FOUND THEN
-        INSERT INTO public.user (email, password)
-        VALUES (input_email, crypt(input_password, gen_salt('bf')));
-        RETURN TRUE;
-    END IF;
-    RETURN FALSE;
-END
-$$ LANGUAGE plpgsql VOLATILE SECURITY DEFINER;
-
-GRANT EXECUTE ON FUNCTION public.signup (input_email varchar(150), input_password varchar(50))
-TO anonymous_user;
-
 CREATE TYPE public.jwt_token AS (
     ROLE text, -- db role of the user
     exp integer, -- expiry date as the unix epoch
@@ -128,6 +108,55 @@ CREATE TYPE public.jwt_token AS (
     first_name varchar(75), -- display name first
     last_name varchar(75) -- display name last
 );
+
+CREATE TYPE public.signup_result AS (
+    status text,
+    jwt_token public.jwt_token
+);
+
+CREATE OR REPLACE FUNCTION public.signup (input_email varchar(150), input_password varchar(50))
+RETURNS public.signup_result AS $$
+DECLARE
+    result varchar DEFAULT NULL;
+    user_id uuid;
+    jwt_token public.jwt_token;
+    signup_result public.signup_result;
+BEGIN
+    -- Check if the email already exists
+    SELECT email
+    FROM public.user
+    WHERE email = input_email INTO result;
+
+    IF FOUND THEN
+        -- Email is in use
+        signup_result.status := 'email in use';
+        signup_result.jwt_token := NULL;
+    ELSE
+        -- Email is not in use, create the user
+        INSERT INTO public.user (email, password)
+        VALUES (input_email, crypt(input_password, gen_salt('bf')))
+        RETURNING id INTO user_id;
+        
+        -- Generate the JWT token
+        SELECT
+            'role_user' AS role, -- Replace with actual role if needed
+            extract(epoch from now() + interval '365 days')::integer AS exp, -- Expiry time (1 hour from now)
+            user_id,
+            input_email AS email,
+            '' AS first_name, -- Replace with actual first name if needed
+            '' AS last_name -- Replace with actual last name if needed
+        INTO jwt_token;
+
+        signup_result.status := 'ok';
+        signup_result.jwt_token := jwt_token;
+    END IF;
+
+    RETURN signup_result;
+END
+$$ LANGUAGE plpgsql VOLATILE SECURITY DEFINER;
+
+GRANT EXECUTE ON FUNCTION public.signup (input_email varchar(150), input_password varchar(50))
+TO anonymous_user;
 
 CREATE OR REPLACE FUNCTION public.signin (input_email text, input_password text)
 RETURNS public.jwt_token AS $$

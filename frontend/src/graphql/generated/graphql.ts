@@ -1,7 +1,5 @@
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from '@tanstack/react-query';
-
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+export type Maybe<T> = T;
+export type InputMaybe<T> = T;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -11,31 +9,6 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-
-function fetcher<TData, TVariables>(
-  endpoint: string,
-  requestInit: RequestInit,
-  query: string,
-  variables?: TVariables,
-) {
-  return async (): Promise<TData> => {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      ...requestInit,
-      body: JSON.stringify({ query, variables }),
-    });
-
-    const json = await res.json();
-
-    if (json.errors) {
-      const { message } = json.errors[0];
-
-      throw new Error(message);
-    }
-
-    return json.data;
-  };
-}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -405,7 +378,7 @@ export type CreatePetPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `Pet`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
 };
 
 /** The output of our create `Pet` mutation. */
@@ -443,7 +416,7 @@ export type CreateRecordPayload = {
   /** Reads a single `RecordType` that is related to this `Record`. */
   recordTypeByRecordType?: Maybe<RecordType>;
   /** Reads a single `User` that is related to this `Record`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
 };
 
 /** The output of our create `Record` mutation. */
@@ -731,7 +704,7 @@ export type DeletePetPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `Pet`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
 };
 
 /** The output of our delete `Pet` mutation. */
@@ -780,7 +753,7 @@ export type DeleteRecordPayload = {
   /** Reads a single `RecordType` that is related to this `Record`. */
   recordTypeByRecordType?: Maybe<RecordType>;
   /** Reads a single `User` that is related to this `Record`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
 };
 
 /** The output of our delete `Record` mutation. */
@@ -1284,13 +1257,11 @@ export type Pet = Node & {
   name: Scalars['String']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
-  ownerFirstName?: Maybe<Scalars['String']['output']>;
-  ownerId: Scalars['UUID']['output'];
-  ownerLastName?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Record`. */
   recordsByPetId: RecordsConnection;
   /** Reads a single `User` that is related to this `Pet`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
+  userId: Scalars['UUID']['output'];
 };
 
 export type PetRecordsByPetIdArgs = {
@@ -1315,12 +1286,8 @@ export type PetCondition = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `name` field. */
   name?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `ownerFirstName` field. */
-  ownerFirstName?: InputMaybe<Scalars['String']['input']>;
-  /** Checks for equality with the object’s `ownerId` field. */
-  ownerId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `ownerLastName` field. */
-  ownerLastName?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** An input for mutations affecting `Pet` */
@@ -1330,9 +1297,7 @@ export type PetInput = {
   dob: Scalars['Datetime']['input'];
   id?: InputMaybe<Scalars['UUID']['input']>;
   name: Scalars['String']['input'];
-  ownerFirstName?: InputMaybe<Scalars['String']['input']>;
-  ownerId: Scalars['UUID']['input'];
-  ownerLastName?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['UUID']['input'];
 };
 
 /** Represents an update to a `Pet`. Fields that are set will be updated. */
@@ -1342,9 +1307,7 @@ export type PetPatch = {
   dob?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  ownerFirstName?: InputMaybe<Scalars['String']['input']>;
-  ownerId?: InputMaybe<Scalars['UUID']['input']>;
-  ownerLastName?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `Pet` values. */
@@ -1382,14 +1345,10 @@ export enum PetsOrderBy {
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   Natural = 'NATURAL',
-  OwnerFirstNameAsc = 'OWNER_FIRST_NAME_ASC',
-  OwnerFirstNameDesc = 'OWNER_FIRST_NAME_DESC',
-  OwnerIdAsc = 'OWNER_ID_ASC',
-  OwnerIdDesc = 'OWNER_ID_DESC',
-  OwnerLastNameAsc = 'OWNER_LAST_NAME_ASC',
-  OwnerLastNameDesc = 'OWNER_LAST_NAME_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
 }
 
 /** The root query type which gives access points into the data universe. */
@@ -1639,7 +1598,6 @@ export type Record = Node & {
   id: Scalars['UUID']['output'];
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID']['output'];
-  ownerId: Scalars['UUID']['output'];
   /** Reads a single `Pet` that is related to this `Record`. */
   petByPetId?: Maybe<Pet>;
   petId: Scalars['UUID']['output'];
@@ -1647,7 +1605,8 @@ export type Record = Node & {
   /** Reads a single `RecordType` that is related to this `Record`. */
   recordTypeByRecordType?: Maybe<RecordType>;
   /** Reads a single `User` that is related to this `Record`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
+  userId: Scalars['UUID']['output'];
   /** Reads and enables pagination through a set of `VaccineRecord`. */
   vaccineRecordsByRecordId: VaccineRecordsConnection;
 };
@@ -1678,30 +1637,30 @@ export type RecordCondition = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `ownerId` field. */
-  ownerId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `petId` field. */
   petId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `recordType` field. */
   recordType?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** An input for mutations affecting `Record` */
 export type RecordInput = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
-  ownerId: Scalars['UUID']['input'];
   petId: Scalars['UUID']['input'];
   recordType: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
 };
 
 /** Represents an update to a `Record`. Fields that are set will be updated. */
 export type RecordPatch = {
   createdAt?: InputMaybe<Scalars['Datetime']['input']>;
   id?: InputMaybe<Scalars['UUID']['input']>;
-  ownerId?: InputMaybe<Scalars['UUID']['input']>;
   petId?: InputMaybe<Scalars['UUID']['input']>;
   recordType?: InputMaybe<Scalars['UUID']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export type RecordType = Node & {
@@ -1809,14 +1768,14 @@ export enum RecordsOrderBy {
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
-  OwnerIdAsc = 'OWNER_ID_ASC',
-  OwnerIdDesc = 'OWNER_ID_DESC',
   PetIdAsc = 'PET_ID_ASC',
   PetIdDesc = 'PET_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   RecordTypeAsc = 'RECORD_TYPE_ASC',
   RecordTypeDesc = 'RECORD_TYPE_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
 }
 
 /** All input for the `signin` mutation. */
@@ -1857,7 +1816,6 @@ export type SignupInput = {
 /** The output of our `signup` mutation. */
 export type SignupPayload = {
   __typename?: 'SignupPayload';
-  boolean?: Maybe<Scalars['Boolean']['output']>;
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
@@ -1865,6 +1823,13 @@ export type SignupPayload = {
   clientMutationId?: Maybe<Scalars['String']['output']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  signupResult?: Maybe<SignupResult>;
+};
+
+export type SignupResult = {
+  __typename?: 'SignupResult';
+  jwtToken?: Maybe<Scalars['JwtToken']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
 };
 
 /** All input for the `updateAdminById` mutation. */
@@ -2063,7 +2028,7 @@ export type UpdatePetPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `Pet`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
 };
 
 /** The output of our update `Pet` mutation. */
@@ -2115,7 +2080,7 @@ export type UpdateRecordPayload = {
   /** Reads a single `RecordType` that is related to this `Record`. */
   recordTypeByRecordType?: Maybe<RecordType>;
   /** Reads a single `User` that is related to this `Record`. */
-  userByOwnerId?: Maybe<User>;
+  userByUserId?: Maybe<User>;
 };
 
 /** The output of our update `Record` mutation. */
@@ -2292,9 +2257,9 @@ export type User = Node & {
   nodeId: Scalars['ID']['output'];
   password?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `Pet`. */
-  petsByOwnerId: PetsConnection;
+  petsByUserId: PetsConnection;
   /** Reads and enables pagination through a set of `Record`. */
-  recordsByOwnerId: RecordsConnection;
+  recordsByUserId: RecordsConnection;
   role?: Maybe<UserRole>;
 };
 
@@ -2308,7 +2273,7 @@ export type UserAdminsByUserIdArgs = {
   orderBy?: InputMaybe<Array<AdminsOrderBy>>;
 };
 
-export type UserPetsByOwnerIdArgs = {
+export type UserPetsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<PetCondition>;
@@ -2318,7 +2283,7 @@ export type UserPetsByOwnerIdArgs = {
   orderBy?: InputMaybe<Array<PetsOrderBy>>;
 };
 
-export type UserRecordsByOwnerIdArgs = {
+export type UserRecordsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   condition?: InputMaybe<RecordCondition>;
@@ -2490,6 +2455,64 @@ export enum VaccineRecordsOrderBy {
   RecordIdDesc = 'RECORD_ID_DESC',
 }
 
+export type AddPetMutationVariables = Exact<{
+  animalId: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
+  name: Scalars['String']['input'];
+  dob: Scalars['Datetime']['input'];
+}>;
+
+export type AddPetMutation = {
+  __typename?: 'Mutation';
+  createPet?: {
+    __typename?: 'CreatePetPayload';
+    pet?: { __typename?: 'Pet'; id: any; name: string; dob: any; userId: any; nodeId: string };
+  };
+};
+
+export type CreateAllergyRecordMutationVariables = Exact<{
+  recordId: Scalars['UUID']['input'];
+  name: Scalars['String']['input'];
+  reactions?: InputMaybe<Scalars['String']['input']>;
+  severity: AllergySeverity;
+}>;
+
+export type CreateAllergyRecordMutation = {
+  __typename?: 'Mutation';
+  createAllergyRecord?: {
+    __typename?: 'CreateAllergyRecordPayload';
+    allergyRecord?: { __typename?: 'AllergyRecord'; id: any };
+  };
+};
+
+export type CreateVaccineRecordMutationVariables = Exact<{
+  recordId: Scalars['UUID']['input'];
+  name: Scalars['String']['input'];
+  administeredAt: Scalars['Datetime']['input'];
+}>;
+
+export type CreateVaccineRecordMutation = {
+  __typename?: 'Mutation';
+  createVaccineRecord?: {
+    __typename?: 'CreateVaccineRecordPayload';
+    vaccineRecord?: { __typename?: 'VaccineRecord'; id: any };
+  };
+};
+
+export type CreateRecordMutationVariables = Exact<{
+  petId: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
+  recordTypeId: Scalars['UUID']['input'];
+}>;
+
+export type CreateRecordMutation = {
+  __typename?: 'Mutation';
+  createRecord?: {
+    __typename?: 'CreateRecordPayload';
+    record?: { __typename?: 'Record'; id: any; recordType: any };
+  };
+};
+
 export type SigninMutationVariables = Exact<{
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -2497,7 +2520,7 @@ export type SigninMutationVariables = Exact<{
 
 export type SigninMutation = {
   __typename?: 'Mutation';
-  signin?: { __typename?: 'SigninPayload'; jwtToken?: any | null } | null;
+  signin?: { __typename?: 'SigninPayload'; jwtToken?: any };
 };
 
 export type SignupMutationVariables = Exact<{
@@ -2507,7 +2530,30 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = {
   __typename?: 'Mutation';
-  signup?: { __typename?: 'SignupPayload'; boolean?: boolean | null } | null;
+  signup?: {
+    __typename?: 'SignupPayload';
+    signupResult?: { __typename?: 'SignupResult'; status?: string; jwtToken?: any };
+  };
+};
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['UUID']['input'];
+  patch: UserPatch;
+}>;
+
+export type UpdateUserMutation = {
+  __typename?: 'Mutation';
+  updateUserById?: {
+    __typename?: 'UpdateUserPayload';
+    user?: {
+      __typename?: 'User';
+      id: any;
+      email: string;
+      firstName?: string;
+      lastName?: string;
+      nodeId: string;
+    };
+  };
 };
 
 export type AllAnimalsQueryVariables = Exact<{ [key: string]: never }>;
@@ -2517,87 +2563,71 @@ export type AllAnimalsQuery = {
   allAnimals?: {
     __typename?: 'AnimalsConnection';
     totalCount: number;
-    nodes: Array<{ __typename?: 'Animal'; id: any; name: string } | null>;
-  } | null;
+    nodes: Array<{ __typename?: 'Animal'; id: any; name: string; nodeId: string }>;
+  };
 };
 
-export const SigninDocument = `
-    mutation Signin($email: String!, $password: String!) {
-  signin(input: {inputPassword: $password, inputEmail: $email}) {
-    jwtToken
-  }
-}
-    `;
+export type AllPetsQueryVariables = Exact<{ [key: string]: never }>;
 
-export const useSigninMutation = <TError = unknown, TContext = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<SigninMutation, TError, SigninMutationVariables, TContext>,
-) => {
-  return useMutation<SigninMutation, TError, SigninMutationVariables, TContext>({
-    mutationKey: ['Signin'],
-    mutationFn: (variables?: SigninMutationVariables) =>
-      fetcher<SigninMutation, SigninMutationVariables>(
-        dataSource.endpoint,
-        dataSource.fetchParams || {},
-        SigninDocument,
-        variables,
-      )(),
-    ...options,
-  });
+export type AllPetsQuery = {
+  __typename?: 'Query';
+  allPets?: {
+    __typename?: 'PetsConnection';
+    totalCount: number;
+    nodes: Array<{
+      __typename?: 'Pet';
+      id: any;
+      name: string;
+      dob: any;
+      userId: any;
+      animalId: any;
+      createdAt?: any;
+      nodeId: string;
+      animalByAnimalId?: { __typename?: 'Animal'; id: any; name: string; nodeId: string };
+    }>;
+  };
 };
 
-export const SignupDocument = `
-    mutation Signup($email: String!, $password: String!) {
-  signup(input: {inputEmail: $email, inputPassword: $password}) {
-    boolean
-  }
-}
-    `;
+export type AllRecordTypesQueryVariables = Exact<{ [key: string]: never }>;
 
-export const useSignupMutation = <TError = unknown, TContext = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
-  options?: UseMutationOptions<SignupMutation, TError, SignupMutationVariables, TContext>,
-) => {
-  return useMutation<SignupMutation, TError, SignupMutationVariables, TContext>({
-    mutationKey: ['Signup'],
-    mutationFn: (variables?: SignupMutationVariables) =>
-      fetcher<SignupMutation, SignupMutationVariables>(
-        dataSource.endpoint,
-        dataSource.fetchParams || {},
-        SignupDocument,
-        variables,
-      )(),
-    ...options,
-  });
+export type AllRecordTypesQuery = {
+  __typename?: 'Query';
+  allRecordTypes?: {
+    __typename?: 'RecordTypesConnection';
+    nodes: Array<{ __typename?: 'RecordType'; id: any; name: string; nodeId: string }>;
+  };
 };
 
-export const AllAnimalsDocument = `
-    query AllAnimals {
-  allAnimals(orderBy: NAME_ASC) {
-    totalCount
-    nodes {
-      id
-      name
-    }
-  }
-}
-    `;
+export type RecordsByAnimalIdQueryVariables = Exact<{
+  petId: Scalars['UUID']['input'];
+}>;
 
-export const useAllAnimalsQuery = <TData = AllAnimalsQuery, TError = unknown>(
-  dataSource: { endpoint: string; fetchParams?: RequestInit },
-  variables?: AllAnimalsQueryVariables,
-  options?: Omit<UseQueryOptions<AllAnimalsQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseQueryOptions<AllAnimalsQuery, TError, TData>['queryKey'];
-  },
-) => {
-  return useQuery<AllAnimalsQuery, TError, TData>({
-    queryKey: variables === undefined ? ['AllAnimals'] : ['AllAnimals', variables],
-    queryFn: fetcher<AllAnimalsQuery, AllAnimalsQueryVariables>(
-      dataSource.endpoint,
-      dataSource.fetchParams || {},
-      AllAnimalsDocument,
-      variables,
-    ),
-    ...options,
-  });
+export type RecordsByAnimalIdQuery = {
+  __typename?: 'Query';
+  petById?: {
+    __typename?: 'Pet';
+    recordsByPetId: {
+      __typename?: 'RecordsConnection';
+      nodes: Array<{
+        __typename?: 'Record';
+        id: any;
+        recordType: any;
+        createdAt?: any;
+        allergyRecordsByRecordId: {
+          __typename?: 'AllergyRecordsConnection';
+          nodes: Array<{
+            __typename?: 'AllergyRecord';
+            id: any;
+            name: string;
+            reactions?: string;
+            severity: AllergySeverity;
+          }>;
+        };
+        vaccineRecordsByRecordId: {
+          __typename?: 'VaccineRecordsConnection';
+          nodes: Array<{ __typename?: 'VaccineRecord'; id: any; administeredAt: any }>;
+        };
+      }>;
+    };
+  };
 };

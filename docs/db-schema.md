@@ -15,7 +15,7 @@ Table user {
 Table pet {
   id uuid
   animal_id uuid
-  owner_id uuid
+  user_id uuid
   created_at timestamp
   name varchar(60)
   dob timestamp
@@ -26,7 +26,7 @@ Table animal {
   type varchar(50)
 }
 
-Ref: pet.owner_id > user.id // many-to-one
+Ref: pet.user_id > user.id // many-to-one
 Ref: pet.animal_id > animal.id
 
 Table record_type {
@@ -36,13 +36,13 @@ Table record_type {
 
 Table record {
   id uuid
-  owner_id uuid
+  user_id uuid
   pet_id uuid
   record_type_id uuid
   created_at timestamp
 }
 
-Ref: record.owner_id > user.id
+Ref: record.user_id > user.id
 Ref: record.pet_id > pet.id
 Ref: record.record_type_id > record_type.id
 
@@ -102,7 +102,7 @@ CREATE POLICY [TABLE]_user_policy ON private.[TABLE]
             SELECT 1
             FROM private.record r
             WHERE r.id = private.allergy_record.record_id
-              AND r.owner_id = current_setting('jwt.claims.user_id')::uuid
+              AND r.user_id = current_setting('jwt.claims.user_id')::uuid
         )
     );
     

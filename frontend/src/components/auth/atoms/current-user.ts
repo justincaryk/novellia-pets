@@ -9,6 +9,7 @@ export interface CurrentUser {
   email: string;
   userRole: UserRole;
   jwt: string;
+  pauseOnRoute?: boolean;
 }
 
 export const useCurrentUser = atom<CurrentUser | null>(null);

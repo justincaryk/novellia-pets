@@ -1,12 +1,20 @@
-import Link from 'next/link';
+'use client';
 
-import { COMPANY_NAME, PRIVATE_ROUTES } from '@/constants';
+import { useRouter } from 'next/navigation';
+
+import { PRIVATE_ROUTES } from '@/constants';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import Button from '../parts/form/button';
 import PageSubtitle from '../parts/page-subtitle';
 import PageTitle from '../parts/page-title';
 
-export default function RegisterSuccess() {
+export default function UserNameSuccess() {
+  const router = useRouter();
+
+  const handleClickNext = () => {
+    router.push(PRIVATE_ROUTES.DASHBOARD);
+  };
+
   return (
     <div
       className="p-6 space-y-10 flex justify-center"
@@ -23,16 +31,13 @@ export default function RegisterSuccess() {
           <div className="w-full block text-3xl text-center font-bold">Success!</div>
         </div>
         <div className="px-6 pb-6 space-y-4 border-b border-l border-r rounded-lg">
-          <PageTitle text={`You just joined ${COMPANY_NAME}!`} className="text-center pt-4" />
-          <PageSubtitle
-            text={'Click below to finish setting up your profile'}
-            className="text-center"
-          />
+          <PageTitle text={`Awesome! You're all set!`} className="text-center pt-4" />
+          <PageSubtitle text={'Click below to go to your dashboard'} className="text-center" />
           <div>
             <div className="mt-10">
-              <Link href={PRIVATE_ROUTES.DASHBOARD}>
-                <Button primary>Continue to profile setup</Button>
-              </Link>
+              <Button primary onClick={handleClickNext}>
+                Continue to profile setup
+              </Button>
             </div>
           </div>
         </div>

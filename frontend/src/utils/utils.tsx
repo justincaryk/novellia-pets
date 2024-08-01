@@ -20,3 +20,32 @@ export const parseJwt = (token: string) => {
 
   return JSON.parse(jsonPayload);
 };
+
+export const capitalize = <T extends string>(s: T) =>
+  (s[0].toUpperCase() + s.slice(1)) as Capitalize<typeof s>;
+
+export const getAvatarCompatibleColor = (i: number) => {
+  const colors = ['red', 'orange', 'blue', 'yellow', 'green', 'purple', 'teal'];
+  return colors[i % colors.length];
+};
+
+export const getSuitableAnimalAvatar = (name: string) => {
+  switch (name) {
+    case 'dog':
+      return 'wolf';
+    case 'cat':
+      return 'leopard';
+    case 'guinea pig':
+      return 'capybara';
+    case 'hamster':
+      return 'wombat';
+    case 'reptile':
+      return 'snake';
+    case 'bird':
+      return 'duck';
+    case 'fish':
+      return 'kraken';
+    default:
+      return name;
+  }
+};

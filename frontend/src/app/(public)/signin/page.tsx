@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 
+import AuthSwitchFooter from '@/components/auth/auth-switch-footer';
 import SignInForm from '@/components/auth/login-form';
-import AuthSwitchFooter from '@/components/parts/auth-switch-footer';
 import PageTitle from '@/components/parts/page-title';
 import { COMPANY_NAME, PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants';
 
