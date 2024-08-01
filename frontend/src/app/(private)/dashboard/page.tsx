@@ -15,6 +15,7 @@ import { getAvatarCompatibleColor, getSuitableAnimalAvatar } from '@/utils/utils
 const Animal = dynamic(() => import('react-animals'), { ssr: false });
 
 export default function Dashboard() {
+  // move to jotai
   const [activePet, setActivePet] = useState<PetWithAnimal | null>(null);
   const [activeColorIndex, setActiveColorIndex] = useState(-1);
   const { data: pets } = usePetsApi().getPets;
@@ -121,7 +122,9 @@ export default function Dashboard() {
             </div>
 
             {/* add record form */}
-            {addRecordFormActive ? <AddRecordForm onSuccess={handleAddRecordClick} /> : null}
+            {addRecordFormActive ? (
+              <AddRecordForm onSuccess={handleAddRecordClick} pet={activePet as PetWithAnimal} />
+            ) : null}
 
             {/* records list */}
             {!addRecordFormActive ? (

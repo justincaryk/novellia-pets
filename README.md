@@ -66,6 +66,7 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 - [] add a pet view
 - [] new record forms
 - [] first-pet-form > proper max date validation
+- [] dashboard > mobile responsive
 - [] search TODOs
 
 **Dealer's Choice**
