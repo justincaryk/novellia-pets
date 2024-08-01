@@ -22,12 +22,6 @@ export enum RECORDS_QUERY_KEYS {
   RECORD_TYPES = 'record_types',
 }
 
-type AllergyOrVaccineRecordVariables =
-  | { type: 'allergy'; recordDetails: CreateAllergyRecordMutationVariables }
-  | { type: 'vaccine'; recordDetails: CreateVaccineRecordMutationVariables };
-
-type CreateRecordPayloadVariables = CreateRecordMutationVariables & AllergyOrVaccineRecordVariables;
-
 export function useRecordsApi() {
   const { graphQLClient } = useGraphQL();
   const queryClient = useQueryClient();
@@ -44,30 +38,27 @@ export function useRecordsApi() {
       ...staticQueryConfig,
     }),
     addRecordForPet: useMutation({
-      mutationFn: (data: CreateRecordPayloadVariables) =>
+      mutationFn: (data: CreateRecordMutationVariables) =>
         graphQLClient.request<CreateRecordMutation>(CreatePetRecordRequest, data),
-      onSuccess: (data) => {
-        useMutation({
-          mutationFn: (data: CreateRecordPayloadVariables) => {
-            if (data.type === 'allergy') {
-              graphQLClient.request<CreateAllergyRecordMutation>(
-                CreatePetAllergyRecordRequest,
-                data,
-              );
-            } else if (data.type === 'vaccine') {
-              graphQLClient.request<CreateVaccineRecordMutation>(
-                CreatePetVaccineRecordRequest,
-                data,
-              );
-            }
-            // TODO: this is probably invalid. investigate further
-            return Promise.resolve();
-          },
-          onSuccess: () => {
-            queryClient.invalidateQueries({
-              queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
-            });
-          },
+      // onSuccess: (responseData) => {
+      //   return responseData;
+      // },
+    }),
+    addVaccineRecordForPet: useMutation({
+      mutationFn: (data: CreateVaccineRecordMutationVariables) =>
+        graphQLClient.request<CreateVaccineRecordMutation>(CreatePetVaccineRecordRequest, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
+        });
+      },
+    }),
+    addAllergyRecordForPet: useMutation({
+      mutationFn: (data: CreateAllergyRecordMutationVariables) =>
+        graphQLClient.request<CreateAllergyRecordMutation>(CreatePetAllergyRecordRequest, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
         });
       },
     }),

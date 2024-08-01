@@ -24,7 +24,6 @@ export default function AddVaccineForm({ onSuccess }: AddRecordFormProps) {
   });
 
   const trySubmitVaccine = async (data: Yup.InferType<typeof VaccineFormSchema>) => {
-    console.log('base form data: ', data);
     onSuccess(data);
     return;
   };
@@ -54,7 +53,7 @@ export default function AddVaccineForm({ onSuccess }: AddRecordFormProps) {
           {...register(RECORD_FORM_FIELDS.ADMINISTERED_AT)}
         />
 
-        <Button type="submit">Save New Record</Button>
+        <Button primary type="submit">Save New Record</Button>
       </form>
     </div>
   );
