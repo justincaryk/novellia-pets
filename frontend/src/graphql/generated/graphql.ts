@@ -2566,6 +2566,34 @@ export type AddPetMutationVariables = Exact<{
 
 export type AddPetMutation = { __typename?: 'Mutation', createPet?: { __typename?: 'CreatePetPayload', pet?: { __typename?: 'Pet', id: any, name: string, dob: any, userId: any, nodeId: string } } };
 
+export type CreateAllergyRecordMutationVariables = Exact<{
+  recordId: Scalars['UUID']['input'];
+  name: Scalars['String']['input'];
+  reactions?: InputMaybe<Scalars['String']['input']>;
+  severity: AllergySeverity;
+}>;
+
+
+export type CreateAllergyRecordMutation = { __typename?: 'Mutation', createAllergyRecord?: { __typename?: 'CreateAllergyRecordPayload', allergyRecord?: { __typename?: 'AllergyRecord', id: any } } };
+
+export type CreateVaccineRecordMutationVariables = Exact<{
+  recordId: Scalars['UUID']['input'];
+  name: Scalars['String']['input'];
+  administeredAt: Scalars['Datetime']['input'];
+}>;
+
+
+export type CreateVaccineRecordMutation = { __typename?: 'Mutation', createVaccineRecord?: { __typename?: 'CreateVaccineRecordPayload', vaccineRecord?: { __typename?: 'VaccineRecord', id: any } } };
+
+export type CreateRecordMutationVariables = Exact<{
+  petId: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
+  recordTypeId: Scalars['UUID']['input'];
+}>;
+
+
+export type CreateRecordMutation = { __typename?: 'Mutation', createRecord?: { __typename?: 'CreateRecordPayload', record?: { __typename?: 'Record', id: any, recordType: any } } };
+
 export type SigninMutationVariables = Exact<{
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -2599,3 +2627,15 @@ export type AllPetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AllPetsQuery = { __typename?: 'Query', allPets?: { __typename?: 'PetsConnection', totalCount: number, nodes: Array<{ __typename?: 'Pet', id: any, name: string, dob: any, userId: any, animalId: any, createdAt?: any, nodeId: string, animalByAnimalId?: { __typename?: 'Animal', id: any, name: string, nodeId: string } }> } };
+
+export type AllRecordTypesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AllRecordTypesQuery = { __typename?: 'Query', allRecordTypes?: { __typename?: 'RecordTypesConnection', nodes: Array<{ __typename?: 'RecordType', id: any, name: string, nodeId: string }> } };
+
+export type RecordsByAnimalIdQueryVariables = Exact<{
+  petId: Scalars['UUID']['input'];
+}>;
+
+
+export type RecordsByAnimalIdQuery = { __typename?: 'Query', petById?: { __typename?: 'Pet', recordsByPetId: { __typename?: 'RecordsConnection', nodes: Array<{ __typename?: 'Record', id: any, recordType: any, createdAt?: any, allergyRecordsByRecordId: { __typename?: 'AllergyRecordsConnection', nodes: Array<{ __typename?: 'AllergyRecord', id: any, name: string, reactions?: string, severity: AllergySeverity }> }, vaccineRecordsByRecordId: { __typename?: 'VaccineRecordsConnection', nodes: Array<{ __typename?: 'VaccineRecord', id: any, administeredAt: any }> } }> } } };
