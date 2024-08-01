@@ -8,13 +8,14 @@ import PageTitle from '@/components/parts/page-title';
 import SkipLink from '@/components/parts/skip-link';
 import { usePetsApi } from '@/components/pets/pets-api';
 import { PetWithAnimal } from '@/components/pets/types';
-import { getAvatarCompatibleColor } from '@/utils/utils';
+import { getAvatarCompatibleColor, getSuitableAnimalAvatar } from '@/utils/utils';
 
 // this causes errors during server hydration and must be dynamically imported
 const Animal = dynamic(() => import('react-animals'), { ssr: false });
 
 export default function Dashboard() {
   const [activePet, setActivePet] = useState<PetWithAnimal | null>(null);
+  const [activeColorIndex, setActiveColorIndex] = useState(-1);
   const { data: pets } = usePetsApi().getPets;
 
   const onAddPetClick = (e: unknown) => {};
@@ -22,32 +23,13 @@ export default function Dashboard() {
   useEffect(() => {
     if (pets?.allPets?.nodes.length && !activePet) {
       setActivePet(pets.allPets.nodes[0] as PetWithAnimal);
+      setActiveColorIndex(0);
     }
   }, [pets]);
 
-  const getSuitableAvatar = (name: string) => {
-    switch (name) {
-      case 'dog':
-        return 'wolf';
-      case 'cat':
-        return 'leopard';
-      case 'guinea pig':
-        return 'capybara';
-      case 'hamster':
-        return 'wombat';
-      case 'reptile':
-        return 'snake';
-      case 'bird':
-        return 'duck';
-      case 'fish':
-        return 'kraken';
-      default:
-        return name;
-    }
-  };
-
-  const handlePetClick = (pet: PetWithAnimal) => {
+  const handlePetClick = (pet: PetWithAnimal, i: number) => {
     setActivePet(pet);
+    setActiveColorIndex(i);
   };
 
   return (
@@ -67,17 +49,18 @@ export default function Dashboard() {
         </div>
 
         <div className="w-full grid grid-cols-3 rounded-md gap-x-4">
-          {/* left card container - all pets - width 1/4-1/3 */}
+          {/* all pets container (1/3 w) */}
           <div className="col-span-1 rounded bg-white p-4 shadow shadow-slate-200 space-y-2">
+            <div className="font-bold text-xl border-b pb-2">My pets</div>
             {pets?.allPets?.nodes.map((pet, i) => (
               <div
                 key={pet.id}
                 className="flex gap-x-2 cursor-pointer align-middle rounded p-2 hover:bg-slate-200"
                 role="button"
-                onClick={() => handlePetClick(pet as PetWithAnimal)}
+                onClick={() => handlePetClick(pet as PetWithAnimal, i)}
               >
                 <Animal
-                  name={getSuitableAvatar(pet.animalByAnimalId?.name || '')}
+                  name={getSuitableAnimalAvatar(pet.animalByAnimalId?.name || '')}
                   circle
                   color={getAvatarCompatibleColor(i)}
                   size="55px"
@@ -91,14 +74,31 @@ export default function Dashboard() {
             {/* empty results */}
             {!pets?.allPets?.nodes.length ? <div>No pets found. Go add a new pet!</div> : null}
           </div>
-          {/* right container - active dog */}
-          <div className="col-span-2 bg-white w-full space-x-4 p-4 shadow shadow-slate-200">
+          {/* pet detail container (2/3) */}
+          <div className="col-span-2 bg-white w-full space-y-4 p-4 shadow shadow-slate-200">
             {/* title level */}
             <div className="flex justify-between align-middle">
-              <div className="text-lg font-bold">{activePet?.name}</div>
+              <div className="flex gap-x-2 items-center">
+                <Animal
+                  name={getSuitableAnimalAvatar(activePet?.animalByAnimalId?.name || '')}
+                  circle
+                  color={getAvatarCompatibleColor(activeColorIndex)}
+                  size="45px"
+                />
+                <div className="text-4xl font-bold">{activePet?.name}</div>
+              </div>
+
               <Button type="button" className="w-auto">
                 + Add record
               </Button>
+            </div>
+            {/* pet summary */}
+            <div>
+              <div>Date of birth: {new Date(activePet?.dob).toDateString()}</div>
+              <div>
+                Pet type: <span className="capitalize">{activePet?.animalByAnimalId?.name}</span>
+              </div>
+              <div>Created at: {new Date(activePet?.dob).toDateString()}</div>
             </div>
             {/* records list */}
             <div>

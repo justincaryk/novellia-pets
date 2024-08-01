@@ -15,6 +15,7 @@ export default gql`
           name
           nodeId
         }
+        createdAt
         nodeId
       }
     }
