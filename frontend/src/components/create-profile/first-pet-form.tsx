@@ -50,8 +50,6 @@ export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
       return;
     }
 
-    console.log('form data: ', data);
-
     await addPet({
       animalId: data.animal,
       dob: data.dob,
@@ -85,7 +83,7 @@ export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
       noValidate
     >
       <FormField
-        label="Pet Name"
+        label="Pet name"
         placeholder="Pet name"
         type="text"
         errors={errors.name}
