@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect } from 'react';
+import { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
