@@ -65,11 +65,6 @@ const FormField = React.forwardRef(
         {label ? (
           <Label text={label} htmlFor={name} onClick={handleLabelClick} onKeyDown={handleKeydown} />
         ) : null}
-        {/* {rest.type === 'password' ? (
-          <Password errors={errors} name={name} {...rest} ref={ref} aria-describedby={name} />
-        ) : (
-          <Input errors={errors} name={name} {...rest} ref={ref} aria-describedby={name} />
-        )} */}
         {rest.type === 'password' ? (
           <Password
             errors={errors}
