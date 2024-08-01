@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Button from '@/components/parts/form/button';
 import PageTitle from '@/components/parts/page-title';
@@ -9,6 +9,8 @@ import PageTitle from '@/components/parts/page-title';
 import { usePetsApi } from '@/components/pets/pets-api';
 import { PetWithAnimal } from '@/components/pets/types';
 import AddRecordForm from '@/components/records/add-base-record-form';
+import { useRecordsApi } from '@/components/records/records-api';
+import { MungedPetRecord } from '@/components/records/types';
 import { getAvatarCompatibleColor, getSuitableAnimalAvatar } from '@/utils/utils';
 
 // this causes errors during server hydration and must be dynamically imported
@@ -17,9 +19,10 @@ const Animal = dynamic(() => import('react-animals'), { ssr: false });
 export default function Dashboard() {
   // move to jotai
   const [activePet, setActivePet] = useState<PetWithAnimal | null>(null);
+  const [addRecordFormActive, toggleAddRecordFormActive] = useState(false);
   const [activeColorIndex, setActiveColorIndex] = useState(-1);
   const { data: pets } = usePetsApi().getPets;
-  const [addRecordFormActive, toggleAddRecordFormActive] = useState(false);
+  const { data: petRecords } = useRecordsApi(activePet?.id).getRecordsByPetId;
 
   useEffect(() => {
     if (pets?.allPets?.nodes.length && !activePet) {
@@ -32,8 +35,56 @@ export default function Dashboard() {
     setActivePet(pet);
     setActiveColorIndex(i);
   };
+
   const handleAddRecordClick = () => {
     toggleAddRecordFormActive(!addRecordFormActive);
+  };
+
+  const activePetRecords = useMemo(() => {
+    const collated: MungedPetRecord[] = [];
+
+    if (petRecords?.petById?.recordsByPetId.nodes.length) {
+      for (const record of petRecords.petById.recordsByPetId.nodes) {
+        record.allergyRecordsByRecordId.nodes.forEach((allergyRecord) => {
+          const munged: MungedPetRecord = {
+            recordId: record.id,
+            userId: record.userId,
+            petId: record.petId,
+            recordType: record.recordType,
+            createdAt: record.createdAt,
+            type: 'allergy',
+            name: allergyRecord.name,
+            reactions: allergyRecord.reactions,
+            severity: allergyRecord.severity,
+            allergyRecordId: allergyRecord.id,
+          };
+          collated.push(munged);
+        });
+
+        record.vaccineRecordsByRecordId.nodes.forEach((vaccineRecord) => {
+          const munged: MungedPetRecord = {
+            recordId: record.id,
+            userId: record.userId,
+            petId: record.petId,
+            recordType: record.recordType,
+            createdAt: record.createdAt,
+            type: 'vaccine',
+            name: vaccineRecord.name,
+            administeredAt: new Date(vaccineRecord.administeredAt),
+          };
+          collated.push(munged);
+        });
+      }
+    }
+
+    return collated;
+  }, [petRecords?.petById?.recordsByPetId.nodes]);
+
+  const checkShouldShowEmptyRecordMsg = () => {
+    const mungedRecordsHaveData = activePetRecords.length === 0;
+    const rawResponseHasData = petRecords?.petById?.recordsByPetId.nodes.length === 0;
+
+    return (!rawResponseHasData || !mungedRecordsHaveData) && !addRecordFormActive;
   };
 
   return (
@@ -133,13 +184,26 @@ export default function Dashboard() {
             ) : null}
 
             {/* records list */}
-            {!addRecordFormActive ? (
-              <div>
-                <div>Record 1</div>
-                <div>Record 2</div>
-                <div>Record 3</div>
+            {!addRecordFormActive && activePetRecords.length ? (
+              <div className="space-y-2">
+                {activePetRecords.map((record) => {
+                  return (
+                    <div key={record.recordId} className="flex gap-x-2">
+                      <div className="font-bold">{record.name}</div>
+                      <div>({record.type})</div>
+                      <div>{record.administeredAt?.toDateString()}</div>
+                      <div>{record.reactions}</div>
+                      <div>{record.severity}</div>
+                    </div>
+                  );
+                })}
               </div>
             ) : null}
+
+            {/* empty records message (hide while form active) */}
+            {checkShouldShowEmptyRecordMsg() ? null : (
+              <div className="w-full pt-12 text-xl">No records found!</div>
+            )}
           </div>
         </div>
       </div>

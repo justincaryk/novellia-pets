@@ -1,5 +1,7 @@
 import * as Yup from 'yup';
 
+import { AllergySeverity, Record } from '@/graphql/generated/graphql';
+
 export enum RECORD_FORM_FIELDS {
   RECORD_TYPE = 'recordType',
   NAME = 'name',
@@ -24,3 +26,14 @@ export const VaccineFormSchema = Yup.object().shape({
     'Vaccine administration date required',
   ),
 });
+
+export type MungedPetRecord = Pick<Record, 'petId' | 'recordType' | 'createdAt' | 'userId'> & {
+  recordId: string;
+  name: string;
+  type: 'allergy' | 'vaccine';
+  reactions?: string;
+  severity?: AllergySeverity;
+  allergyRecordId?: string;
+  administeredAt?: Date;
+  vaccineRecordId?: string;
+};

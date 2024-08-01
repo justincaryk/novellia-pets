@@ -6,6 +6,8 @@ export default gql`
       recordsByPetId {
         nodes {
           id
+          userId
+          petId
           recordType
           createdAt
           allergyRecordsByRecordId {
@@ -19,6 +21,7 @@ export default gql`
           vaccineRecordsByRecordId {
             nodes {
               id
+              name
               administeredAt
             }
           }

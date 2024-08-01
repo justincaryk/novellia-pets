@@ -22,14 +22,22 @@ export enum RECORDS_QUERY_KEYS {
   RECORD_TYPES = 'record_types',
 }
 
-export function useRecordsApi() {
+export function useRecordsApi(activePetId?: string) {
   const { graphQLClient } = useGraphQL();
   const queryClient = useQueryClient();
 
   return {
     getRecordsByPetId: useQuery({
-      queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS],
-      queryFn: async () => graphQLClient.request<RecordsByAnimalIdQuery>(GetAllPetRecordsRequest),
+      queryKey: [RECORDS_QUERY_KEYS.PET_RECORDS, activePetId],
+      queryFn: async () => {
+        if (activePetId) {
+          return graphQLClient.request<RecordsByAnimalIdQuery>(GetAllPetRecordsRequest, {
+            petId: activePetId,
+          });
+        }
+
+        return null;
+      },
       ...staticQueryConfig,
     }),
     getRecordTypes: useQuery({

@@ -24,7 +24,9 @@ export default function UserNamePage() {
         <div className="space-y-10">
           <div>
             <PageTitle text={'Tell us your name!'} />
-            <PageSubtitle text={'You can skip this and add these details later if you would like.'} />
+            <PageSubtitle
+              text={'You can skip this and add these details later if you would like.'}
+            />
           </div>
 
           <SkipLink href={PRIVATE_ROUTES.DASHBOARD} skipLinkText="Skip this and go to Dashboard" />
