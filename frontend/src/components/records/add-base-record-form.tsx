@@ -93,9 +93,6 @@ export default function AddRecordForm({ onSuccess }: AddRecordFormProps) {
   //     }
   //   }, [data, setError, status, onSuccess]);
 
-  console.log('isValid: ', isValid);
-  console.log('values: ', getValues());
-  console.log('errors: ', errors);
   return (
     <div className='space-y-2'>
       {/* BASE FORM */}

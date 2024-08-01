@@ -8,6 +8,7 @@ import PageTitle from '@/components/parts/page-title';
 import SkipLink from '@/components/parts/skip-link';
 import { usePetsApi } from '@/components/pets/pets-api';
 import { PetWithAnimal } from '@/components/pets/types';
+import AddRecordForm from '@/components/records/add-base-record-form';
 import { getAvatarCompatibleColor, getSuitableAnimalAvatar } from '@/utils/utils';
 
 // this causes errors during server hydration and must be dynamically imported
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [activePet, setActivePet] = useState<PetWithAnimal | null>(null);
   const [activeColorIndex, setActiveColorIndex] = useState(-1);
   const { data: pets } = usePetsApi().getPets;
+  const [addRecordFormActive, toggleAddRecordFormActive] = useState(false);
 
   const onAddPetClick = (e: unknown) => {};
 
@@ -31,10 +33,13 @@ export default function Dashboard() {
     setActivePet(pet);
     setActiveColorIndex(i);
   };
+  const handleAddRecordClick = () => {
+    toggleAddRecordFormActive(!addRecordFormActive);
+  };
 
   return (
     <div className="space-y-4 w-full max-w-screen-lg">
-      {/* TODO */}
+      {/* TODO update skip links */}
       {/* <SkipLink href="#page-title" skipLinkText="Skip to Page Title" />
       <SkipLink href="#dashboard-content" skipLinkText="Skip to Dashboard Content" /> */}
       <PageTitle id="page-title" text="Dashboard" />
@@ -74,10 +79,12 @@ export default function Dashboard() {
             {/* empty results */}
             {!pets?.allPets?.nodes.length ? <div>No pets found. Go add a new pet!</div> : null}
           </div>
+
           {/* pet detail container (2/3) */}
           <div className="col-span-2 bg-white w-full space-y-4 p-4 shadow shadow-slate-200">
-            {/* title level */}
-            <div className="flex justify-between align-middle">
+            {/* container title */}
+            <div className="flex justify-between align-middle border-b pb-2">
+              {/* name and avatar */}
               <div className="flex gap-x-2 items-center">
                 <Animal
                   name={getSuitableAnimalAvatar(activePet?.animalByAnimalId?.name || '')}
@@ -88,24 +95,42 @@ export default function Dashboard() {
                 <div className="text-4xl font-bold">{activePet?.name}</div>
               </div>
 
-              <Button type="button" className="w-auto">
-                + Add record
-              </Button>
-            </div>
-            {/* pet summary */}
-            <div>
-              <div>Date of birth: {new Date(activePet?.dob).toDateString()}</div>
+              {/* pet summary */}
               <div>
-                Pet type: <span className="capitalize">{activePet?.animalByAnimalId?.name}</span>
+                <div>Date of birth: {new Date(activePet?.dob).toDateString()}</div>
+                <div>
+                  Pet type: <span className="capitalize">{activePet?.animalByAnimalId?.name}</span>
+                </div>
+                <div>Created at: {new Date(activePet?.dob).toDateString()}</div>
               </div>
-              <div>Created at: {new Date(activePet?.dob).toDateString()}</div>
             </div>
+
+            {/* pet record summary */}
+            <div className="flex justify-between w-full align-center">
+              <div className="font-bold text-2xl">Records</div>
+              <div>
+                <Button
+                  type="button"
+                  className={`w-auto ${addRecordFormActive ? 'bg-red-error text-white hover:bg-red-900 hover:text-white' : ''}`}
+                  onClick={handleAddRecordClick}
+                >
+                  {addRecordFormActive ? 'Discard changes' : '+ Add record'}
+                </Button>
+                {/* TODO: sort by type, sort by date created */}
+              </div>
+            </div>
+
+            {/* add record form */}
+            {addRecordFormActive ? <AddRecordForm onSuccess={handleAddRecordClick} /> : null}
+
             {/* records list */}
-            <div>
-              <div>Record 1</div>
-              <div>Record 2</div>
-              <div>Record 3</div>
-            </div>
+            {!addRecordFormActive ? (
+              <div>
+                <div>Record 1</div>
+                <div>Record 2</div>
+                <div>Record 3</div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ import reportAccessibility from '@/utils/report-accessibility';
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative h-screen bg-slate-50">
+    <div className="relative bg-slate-50 mb-25">
       <div className="w-full flex items-center py-2 px-12 justify-end" role="banner">
         <div className="font-bold text-4xl text-blue-dark">{COMPANY_NAME}</div>
         <div className="rounded-full bg-blue-dark ml-2 p-1">
