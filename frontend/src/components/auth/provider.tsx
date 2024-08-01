@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants';
+import { ADMIN_ROUTES, PRIVATE_ROUTES, PUBLIC_ROUTES } from '@/constants';
 import { parseJwt } from '@/utils/utils';
 import { useCurrentUser, useSetCurrentUser } from './atoms/current-user';
 // import Loading from '../../app/loading'
@@ -25,6 +25,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
   const privateRoutes = useMemo(() => Object.values(PRIVATE_ROUTES), []);
   const publicRoutes = useMemo(() => Object.values(PUBLIC_ROUTES), []);
+  const adminRoutes = useMemo(() => Object.values(ADMIN_ROUTES), []);
 
   const isPublicRoute = useMemo(() => {
     return publicRoutes.includes(pathname as PublicPathname);
@@ -33,6 +34,10 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const isPrivateRoute = useMemo(() => {
     return privateRoutes.includes(pathname as PrivatePathname);
   }, [pathname, privateRoutes]);
+
+  const isAdminRoute = useMemo(() => {
+    return adminRoutes.includes(pathname as PrivatePathname);
+  }, [pathname, adminRoutes]);
 
   // create the session
   useEffect(() => {
@@ -58,6 +63,19 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     if (hydrating) {
       return;
     }
+
+    // reroute non-admin from private
+    if (isAdminRoute) {
+      if (!currentUser) {
+        router.push(PUBLIC_ROUTES.SIGNIN);
+        return;
+      }
+      if (currentUser && currentUser.userRole !== 'role_admin') {
+        router.push(PRIVATE_ROUTES.DASHBOARD);
+        return;
+      }
+    }
+
     // reroute FROM public pages if signed in
     if (isPublicRoute && currentUser?.userId && !currentUser?.pauseOnRoute) {
       router.push(PRIVATE_ROUTES.DASHBOARD);
