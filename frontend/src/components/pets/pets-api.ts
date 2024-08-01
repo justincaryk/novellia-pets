@@ -1,10 +1,12 @@
 import {
   AddPetMutation,
   AddPetMutationVariables,
+  AllAdminPetsQuery,
   AllAnimalsQuery,
   AllPetsQuery,
 } from '@/graphql/generated/graphql';
 import CreatePetRequest from '@/graphql/mutations/create-pet';
+import GetAdminPetsRequest from '@/graphql/queries/admin-pets';
 import GetAnimalRequest from '@/graphql/queries/all-animals';
 import GetAllPetsRequest from '@/graphql/queries/all-pets';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,7 +18,7 @@ export enum PET_QUERY_KEYS {
   ANIMALS = 'animals',
 }
 
-export function usePetsApi() {
+export function usePetsApi(userRole?: string, userId?: string) {
   const { graphQLClient } = useGraphQL();
   const queryClient = useQueryClient();
 
@@ -27,8 +29,18 @@ export function usePetsApi() {
       ...staticQueryConfig,
     }),
     getPets: useQuery({
-      queryKey: [PET_QUERY_KEYS.PETS],
-      queryFn: async () => graphQLClient.request<AllPetsQuery>(GetAllPetsRequest),
+      queryKey: [PET_QUERY_KEYS.PETS, userRole, userId],
+      queryFn: async () => {
+        if (!userRole) {
+          return null;
+        }
+        // ensure by default, admins only receive their pets
+        if (userRole === 'role_admin') {
+          return graphQLClient.request<AllAdminPetsQuery>(GetAdminPetsRequest, { userId: userId });
+        }
+
+        return graphQLClient.request<AllPetsQuery>(GetAllPetsRequest);
+      },
       ...staticQueryConfig,
     }),
     addPet: useMutation({
