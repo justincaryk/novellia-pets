@@ -40,7 +40,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
 
     if (JWT && !currentUser) {
       const parsed = parseJwt(JWT);
-      
+
       if (Object.keys(parsed).length) {
         setCurrentUser({
           userId: parsed.user_id,
