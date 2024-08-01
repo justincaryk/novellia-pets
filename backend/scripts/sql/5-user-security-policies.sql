@@ -96,18 +96,3 @@ BEFORE INSERT
 ON private.record
 FOR EACH ROW
 EXECUTE FUNCTION private.check_is_this_user();
-
--- vaccine creation
-CREATE TRIGGER vaccine_create_trigger
-BEFORE INSERT
-ON private.vaccine_record
-FOR EACH ROW
-EXECUTE FUNCTION private.check_is_this_user();
-
--- allergy creation
-CREATE TRIGGER allergy_create_trigger
-BEFORE INSERT
-ON private.allergy_record
-FOR EACH ROW
-EXECUTE FUNCTION private.check_is_this_user();
-
