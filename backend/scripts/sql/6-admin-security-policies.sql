@@ -3,6 +3,8 @@
 -- admin policies -- allow READ of all pets, owners, and records
 
 GRANT USAGE ON SCHEMA private TO role_admin;
+GRANT USAGE ON SCHEMA public TO role_admin;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO role_admin;
 GRANT SELECT ON ALL TABLES IN SCHEMA private TO role_admin;
 
 -- revoke select so we can write a more permissive policy
