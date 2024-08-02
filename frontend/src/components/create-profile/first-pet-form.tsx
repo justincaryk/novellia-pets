@@ -120,7 +120,7 @@ export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
       </div>
 
       <div className="flex gap-x-4 items-center justify-end">
-        <Link href={PRIVATE_ROUTES.UPDATE_NAME} className="w-1/3">
+        <Link href={PRIVATE_ROUTES.DASHBOARD} className="w-1/3">
           <Button type="button">Skip</Button>
         </Link>
         <div className="w-2/3">

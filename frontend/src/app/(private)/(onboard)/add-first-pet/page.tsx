@@ -29,10 +29,10 @@ export default function UserNamePage() {
           </div>
 
           <SkipLink href={PRIVATE_ROUTES.DASHBOARD} skipLinkText="Skip this and go to Dashboard" />
-          <SkipLink
+          {/* <SkipLink
             href={PRIVATE_ROUTES.UPDATE_NAME}
             skipLinkText="Skip this and update your name"
-          />
+          /> */}
 
           <FirstPetForm onSuccess={onFormSubmitSuccess} />
         </div>
