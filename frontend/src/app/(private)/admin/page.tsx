@@ -58,7 +58,7 @@ export default function AdminPage() {
                 <div className="font-bold pb-4 text-xl">
                   <div className="border-b">Summary</div>
                 </div>
-                <div>Pet's Name: {pet.name}</div>
+                <div>Pet&apos;s Name: {pet.name}</div>
                 <div>DOB: {new Date(pet.dob).toDateString()}</div>
                 <div>Type: {pet.animalByAnimalId?.name}</div>
                 <div>Person: {pet.userByUserId?.email}</div>
