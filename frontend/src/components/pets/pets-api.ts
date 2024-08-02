@@ -1,12 +1,14 @@
 import {
   AddPetMutation,
   AddPetMutationVariables,
+  AdminPetsFullQuery,
   AllAdminPetsQuery,
   AllAnimalsQuery,
   AllPetsQuery,
 } from '@/graphql/generated/graphql';
 import CreatePetRequest from '@/graphql/mutations/create-pet';
 import GetAdminPetsRequest from '@/graphql/queries/admin-pets';
+import GetAdminPetsFullRequest from '@/graphql/queries/admin-pets-full';
 import GetAnimalRequest from '@/graphql/queries/all-animals';
 import GetAllPetsRequest from '@/graphql/queries/all-pets';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,6 +18,7 @@ import { staticQueryConfig } from '../react-query/defaults';
 export enum PET_QUERY_KEYS {
   PETS = 'pets',
   ANIMALS = 'animals',
+  ADMIN_PETS_FULL = 'admin-pets-full'
 }
 
 export function usePetsApi(userRole?: string, userId?: string) {
@@ -54,6 +57,11 @@ export function usePetsApi(userRole?: string, userId?: string) {
           queryKey: [PET_QUERY_KEYS.PETS],
         });
       },
+    }),
+    adminGetPetsFull: useQuery({
+      queryKey: [PET_QUERY_KEYS.ADMIN_PETS_FULL],
+      queryFn: async () => graphQLClient.request<AdminPetsFullQuery>(GetAdminPetsFullRequest),
+      ...staticQueryConfig,
     }),
   };
 }
