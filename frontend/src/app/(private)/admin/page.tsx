@@ -29,7 +29,7 @@ export default function AdminPage() {
         {/* pseudo table elemt */}
         <div className="space-y-4 p-2 border rounded">
           <div className="border-b font-bold text-2xl">Users</div>
-          <div className="font-bold">Total Count: {users?.allUsers?.totalCount}</div>
+          <div className="font-bold">Total User Count: {users?.allUsers?.totalCount}</div>
 
           <div className="grid grid-cols-3 p-2">
             <div>Email</div>
@@ -50,43 +50,43 @@ export default function AdminPage() {
         <div className="space-y-6 p-2 border rounded">
           <div className="border-b flex gap-x-4 items-end pb-2">
             <div className="font-bold text-2xl">Pets and records</div>
-            <div className="font-bold">Total Count: {petsFull?.allPets?.totalCount}</div>
+            <div className="font-bold">Total Pet Count: {petsFull?.allPets?.totalCount}</div>
           </div>
           {petsFull?.allPets?.nodes.map((pet) => (
             <div key={pet.id} className="border p-4 rounded space-y-4">
               <div>
-                <div className="font-bold  border-b">Summary</div>
-                <div>Name: {pet.name}</div>
+                <div className="font-bold pb-4 text-xl">
+                  <div className="border-b">Summary</div>
+                </div>
+                <div>Pet's Name: {pet.name}</div>
                 <div>DOB: {new Date(pet.dob).toDateString()}</div>
                 <div>Type: {pet.animalByAnimalId?.name}</div>
                 <div>Person: {pet.userByUserId?.email}</div>
               </div>
 
               <div className="space-y-3">
-                <div className="font-bold border-b">Records</div>
+                <div className="font-bold border-b text-xl">Records</div>
                 {!pet.recordsByPetId.nodes.length ? <div>No records found</div> : null}
-                <div className="space-y-3">
+                <div className="space-y-3 divide-solid divide-black">
                   {pet.recordsByPetId.nodes.map((record) => (
-                    <div key={record.id} className="border-b">
-                      <div className="pl-4">
-                        {record.allergyRecordsByRecordId.nodes.map((allergyRecord) => (
-                          <div key={allergyRecord.id} className="">
-                            <div>Allergy Name: {allergyRecord.name}</div>
-                            <div>Reactions: {allergyRecord.reactions || 'none'}</div>
-                            <div>Severity: {allergyRecord.severity}</div>
-                          </div>
-                        ))}
+                    <div key={record.id}>
+                      {record.allergyRecordsByRecordId.nodes.map((allergyRecord) => (
+                        <div key={allergyRecord.id} className="">
+                          <div>Allergy Name: {allergyRecord.name}</div>
+                          <div>Reactions: {allergyRecord.reactions || 'none'}</div>
+                          <div>Severity: {allergyRecord.severity}</div>
+                        </div>
+                      ))}
 
-                        {record.vaccineRecordsByRecordId.nodes.map((vaccineRecord) => (
-                          <div key={vaccineRecord.id} className="">
-                            <div>Vaccine Name: {vaccineRecord.name}</div>
-                            <div>
-                              Administered Date:{' '}
-                              {new Date(vaccineRecord.administeredAt).toDateString()}
-                            </div>
+                      {record.vaccineRecordsByRecordId.nodes.map((vaccineRecord) => (
+                        <div key={vaccineRecord.id} className="">
+                          <div>Vaccine Name: {vaccineRecord.name}</div>
+                          <div>
+                            Administered Date:{' '}
+                            {new Date(vaccineRecord.administeredAt).toDateString()}
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
