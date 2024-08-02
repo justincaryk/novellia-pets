@@ -35,8 +35,10 @@ export default function Dashboard() {
   // in the pet list and active containers
   const [activeColorIndex, setActiveColorIndex] = useState(-1);
   // data fetching
-  const { data: pets } = usePetsApi().getPets;
-  const { data: petRecords } = useRecordsApi(activePet?.id).getRecordsByPetId;
+  const { getPets } = usePetsApi(currentUser?.userRole, currentUser?.userId);
+  const { data: pets } = getPets;
+  const { getRecordsByPetId } = useRecordsApi(activePet?.id || pets?.allPets?.nodes[0].id);
+  const { data: petRecords } = getRecordsByPetId;
 
   useEffect(() => {
     if (pets?.allPets?.nodes.length && !activePet) {
@@ -102,7 +104,7 @@ export default function Dashboard() {
     }
 
     return collated;
-  }, [petRecords]);
+  }, [petRecords?.petById?.recordsByPetId.nodes]);
 
   const checkShouldShowEmptyRecordMsg = () => {
     const mungedRecordsHaveData = activePetRecords.length === 0;

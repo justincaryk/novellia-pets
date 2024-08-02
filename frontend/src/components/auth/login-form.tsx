@@ -48,7 +48,7 @@ export default function LoginForm({ onSuccess }: LoginProps) {
         setCurrentUser({
           userId: parsed.user_id,
           email: parsed.email,
-          userRole: parsed.user_role,
+          userRole: parsed.role,
           jwt: data.signin?.jwtToken,
         });
 

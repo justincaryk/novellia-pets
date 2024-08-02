@@ -1,9 +1,9 @@
 
 -- free read for role_user
-GRANT USAGE ON SCHEMA private TO role_user;
-GRANT ALL ON ALL TABLES IN SCHEMA private TO role_user;
-GRANT SELECT ON private.animal TO role_user;
-GRANT SELECT ON private.record_type TO role_user;
+GRANT USAGE ON SCHEMA private TO role_user, role_admin;
+GRANT ALL ON ALL TABLES IN SCHEMA private TO role_user, role_admin;
+GRANT SELECT ON private.animal TO role_user, role_admin;
+GRANT SELECT ON private.record_type TO role_user, role_admin;
 
 -- user
 ALTER TABLE public.user ENABLE ROW LEVEL SECURITY;

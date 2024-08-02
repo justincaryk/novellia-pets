@@ -2,12 +2,10 @@
 
 import { atom } from 'jotai';
 
-import { UserRole } from '../../../graphql/generated/graphql';
-
 export interface CurrentUser {
   userId: string;
   email: string;
-  userRole: UserRole;
+  userRole: 'role_user' | 'role_admin';
   jwt: string;
   pauseOnRoute?: boolean;
 }

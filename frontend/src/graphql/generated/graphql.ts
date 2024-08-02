@@ -2556,6 +2556,105 @@ export type UpdateUserMutation = {
   };
 };
 
+export type AdminPetsFullQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AdminPetsFullQuery = {
+  __typename?: 'Query';
+  allPets?: {
+    __typename?: 'PetsConnection';
+    totalCount: number;
+    nodes: Array<{
+      __typename?: 'Pet';
+      id: any;
+      name: string;
+      dob: any;
+      userId: any;
+      animalId: any;
+      createdAt?: any;
+      nodeId: string;
+      animalByAnimalId?: { __typename?: 'Animal'; id: any; name: string; nodeId: string };
+      userByUserId?: {
+        __typename?: 'User';
+        id: any;
+        email: string;
+        firstName?: string;
+        lastName?: string;
+      };
+      recordsByPetId: {
+        __typename?: 'RecordsConnection';
+        nodes: Array<{
+          __typename?: 'Record';
+          id: any;
+          userId: any;
+          petId: any;
+          recordType: any;
+          createdAt?: any;
+          allergyRecordsByRecordId: {
+            __typename?: 'AllergyRecordsConnection';
+            nodes: Array<{
+              __typename?: 'AllergyRecord';
+              id: any;
+              name: string;
+              reactions?: string;
+              severity: AllergySeverity;
+            }>;
+          };
+          vaccineRecordsByRecordId: {
+            __typename?: 'VaccineRecordsConnection';
+            nodes: Array<{
+              __typename?: 'VaccineRecord';
+              id: any;
+              name: string;
+              administeredAt: any;
+            }>;
+          };
+        }>;
+      };
+    }>;
+  };
+};
+
+export type AllAdminPetsQueryVariables = Exact<{
+  userId: Scalars['UUID']['input'];
+}>;
+
+export type AllAdminPetsQuery = {
+  __typename?: 'Query';
+  allPets?: {
+    __typename?: 'PetsConnection';
+    totalCount: number;
+    nodes: Array<{
+      __typename?: 'Pet';
+      id: any;
+      name: string;
+      dob: any;
+      userId: any;
+      animalId: any;
+      createdAt?: any;
+      nodeId: string;
+      animalByAnimalId?: { __typename?: 'Animal'; id: any; name: string; nodeId: string };
+    }>;
+  };
+};
+
+export type AdminAllUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type AdminAllUsersQuery = {
+  __typename?: 'Query';
+  allUsers?: {
+    __typename?: 'UsersConnection';
+    totalCount: number;
+    nodes: Array<{
+      __typename?: 'User';
+      id: any;
+      email: string;
+      firstName?: string;
+      lastName?: string;
+      role?: UserRole;
+    }>;
+  };
+};
+
 export type AllAnimalsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AllAnimalsQuery = {
