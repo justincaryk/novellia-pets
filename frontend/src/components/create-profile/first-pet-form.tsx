@@ -60,7 +60,6 @@ export default function FirstPetForm({ onSuccess }: FirstPetFormProps) {
 
   useEffect(() => {
     if (status === 'success') {
-      console.log('result data: ', data);
       if (!data.createPet?.pet?.id) {
         setError('root', {
           message: 'Sorry, something went wrong. Please refresh the page and try again.',

@@ -36,8 +36,6 @@ export default function UserNameForm({ onSuccess }: UpdateUserFormProps) {
       return;
     }
 
-    console.log('data: ', data);
-
     await updateUser({
       id: currentUser?.userId,
       patch: {

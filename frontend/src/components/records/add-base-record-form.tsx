@@ -59,7 +59,7 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
 
   const trySubmitBase = async (data: Yup.InferType<typeof BaseRecordSchema>) => {
     // do nothing, this is shouldn't even be possible
-    console.log('base form data: ', data);
+    console.warn('base form data: ', data);
     return;
   };
 
@@ -161,12 +161,11 @@ export default function AddRecordForm({ onSuccess, pet }: AddRecordFormProps) {
 
   return (
     <div className="space-y-2 relative border rounded">
-      {/* TODO: move loading overlay  */}
+      {/* TODO: move loading overlay into component */}
       {isLoading ? (
         <div
           className="absolute inset-0 bg-black bg-opacity-50 cursor-default z-40 flex items-center justify-center rounded"
           onClick={(e) => {
-            console.log('oka... overlay');
             e.stopPropagation();
           }}
           onKeyDown={(e) => {
