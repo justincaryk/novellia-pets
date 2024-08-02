@@ -16,7 +16,7 @@ export default function FirstPetSuccess({ pet }: AddFirstPetSuccessProps) {
   const router = useRouter();
 
   const handleClickNext = () => {
-    router.push(PRIVATE_ROUTES.UPDATE_NAME);
+    router.push(PRIVATE_ROUTES.DASHBOARD);
   };
 
   return (
@@ -46,7 +46,7 @@ export default function FirstPetSuccess({ pet }: AddFirstPetSuccessProps) {
           <div>
             <div className="mt-10">
               <Button primary onClick={handleClickNext}>
-                Continue to profile setup
+                Continue to dashboard
               </Button>
             </div>
           </div>

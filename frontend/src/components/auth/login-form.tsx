@@ -66,8 +66,6 @@ export default function LoginForm({ onSuccess }: LoginProps) {
   }, [status, data, setSigninError]);
 
   const trySubmit = async (data: Yup.InferType<typeof SigninSchema>) => {
-    console.log('data: ', data);
-
     await signin(data as SigninInput);
   };
 
