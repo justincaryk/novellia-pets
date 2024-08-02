@@ -35,57 +35,65 @@ cp .env.example .env
 
 The `-d` flag runs Docker in a detached state, which will free up the terminal window.
 
+3. Admin
 
-### TODO
+To update a user to an admin, run the following SQL statements in your postgres instance:
 
-**Backend**
-- [x] write sql for schema init
-- [x] write row level security 
-- [x] write sql for seeding db
-- [] revise schema if needed
+```sql
+UPDATE public.user
+SET role = 'ADMIN'
+WHERE id = [USER.ID];
 
-**Frontend**
-- [x] update signup & signin api calls on front end
-- [x] add a pet view
-- [x] new record forms
-- [x] admin dashboard view
-   - [x] view pets
-   - [x] view 
-- [] user dashboard view
-- [] bg does not extend full page on dash
-- [] dropdown needs to work with keyboard
-- [] first-pet-form > proper max date validation
-- [] dashboard > mobile responsive
-- [] dashboard > refactor
-- [] admin > style + refactor
-- [] search TODOs
-- [] currentUser should be extended with a fetch request to the user doc to get firstname, lastname
+INSERT INTO public.admin (user_id)
+VALUES (USER_ID);
+```
 
-**Dealer's Choice**
-- [] one more feature that is cool
-- [] search feature ?
-
-**Build**
-- [] Spin up with 2 commands at most
-
-**Cleanup**
-
-- [] add notes on extending enum (severity: mild/severe - possibly add moderate)
-- [] update ERD with final values
-- [] update schema with final values
-- [] write notes
-- [] confirm everything spins up from scratch
-
+To access the admin view, simply nagivate to `localhost:3000/admin` while signed in with an admin account.
 
 
 ### Thoughts / Considerations
 
 - How and why you modeled the data structure(s) the way you did
+
+There is schema documentation in the `docs/` directory of this codebase. This is a pretty schema. The main consideration was the record structure. It would have been much more convenient given the scope and context of this assignment to just dump all of the various fields into a single Record table and add new columns as needed, but I chose to model it in a way that would be closer to a proper real-world use case. To add a new record type, we'll need to:
+
+1. Insert a row into the RecordType table.
+2. Create the NewRecordTable.
+3. Create policies for NewRecordTable.
+4. Update the frontend queries to fetch those table results. 
+5. Regenerate the schema types via codegen.
+6. Update frontend read queries to handle those new fields. 
+
 - How and why you structured your API(s)
- 
+
+I considered doing a simple express API setup in the backend and just use a basic fetch on the frontend, but I wanted to demonstrate that I'm capable of building in the team's stack. So I settled on a nextjs, typescript, tanstack query client, and graphql-request setup for the frontend. On the backend, I like using postgraphile for small projects, as it avoids the need for a ton of different endpoints. One downside to this approach is it puts a lot of the burden on the database. That said, it is nice to be able to just write some decent SQL and have that schema propagated to the frontend for easy consumption.
+
 - How and why you decided on the page(s) you built
+
+This is a pretty straight forward app directory architecture. Account registration is built with the primary objective of reducing friction. There's a 2-step signup with options to skip the second step. Then it's straight to the dashboard. 
+
+One thing I'm not totally sure about is the form submit confirm messages during onboarding. I've been using my time off to really focus on improving my coding habits around accessibility. A very common theme in the reading I've been doing is that there needs to be very clear state indiciations. UX principles say fewer clicks is better, so the register states I built aren't optimal in that regard, but until I learn more, I chose to err on the side of doing right by those that rely on accessibility tools.
+
 - What improvements you’d make if you want to build this for real
 
+I included a "First Name, "Last Name" route with the intention of providing extra functionality within the dashboard, but time ran out. It is still included in the codebase, but I bypassed the step since it's too unfinished to be useful. 
+
+I need to add a better Loading component. Right now, you will likely see a single little text of "Loading" at the top left. That's not acceptable UX, but I chose to prioritize elsewhere for this takehome.
+
+
+The dashboard page is wildly bloated. Typically, I'll build something in one file to a basic functional complete state. At that point, I'll do a pass to start breaking the code into sensible components. I'll probably do that after submission because this file is really bugging me, and I actually enjoyed working with the specs here.  
+
+A lot of the `useState` stuff in that page would benefit greatly from being moved into jotai atoms so refactoring doesn't lead to lifting and passing something like `activePet` to a dozen different smaller components.
+
+I have testing suites configured and integrated to a point that I'm happy with. This includes above average (at least in my experience) Accessiblity tooling, but the actual test coverage for the new code is no where near acceptable. This would be the first thing I'd address given another working session.
+
+The date input validation is extremely rudimentary. This was another item on the TODO list.
+
+The admin page is basically just a printout at this point.
+
+* Restyle at a minimum
+* Add search feature
+* Top level options that allow the admin to decide how to consume the data (eg. drill down by user, record, or pet)
 
 DB:
 - pretty easily extend new record types by creating a basic many to many lookup table.
@@ -104,7 +112,24 @@ Security:
   - adds an insert trigger to ensure users only insert pets/records which they own
 
 
-  ## Local Development
+## Extra features
+
+**Backend**
+
+* Implemented a basic but functional register/login credentials feature. Passwords are salted and hashed, and frontend access is controlled by a jwt.
+* Implemented Row level security and reasonable policies so user data at least has some level of security
+
+**Frontend**
+
+Like I said, I've been hyperfocused on accessibility lately, so some of the extras below aren't glitzy, but I thought they were worth mentioning.
+
+* Skip links were added for the registration process and dashboard.
+* Color contrast for all the UX was tested and confirmed well. (I think the lowest might be 7, but most scores were rated 10-12)
+* Integrated a little icon library to assign pets an avatar based on the pet type. 
+
+
+
+## Local Development
 
 
 1. Copy `.env.exmaple` into `.env` and update any missing values
