@@ -18,7 +18,7 @@ import { staticQueryConfig } from '../react-query/defaults';
 export enum PET_QUERY_KEYS {
   PETS = 'pets',
   ANIMALS = 'animals',
-  ADMIN_PETS_FULL = 'admin-pets-full'
+  ADMIN_PETS_FULL = 'admin-pets-full',
 }
 
 export function usePetsApi(userRole?: string, userId?: string) {

@@ -10,7 +10,7 @@ export const PRIVATE_ROUTES = {
   ADD_FIRST_PET: '/add-first-pet',
 };
 export const ADMIN_ROUTES = {
-  ADMIN: '/admin'
-}
+  ADMIN: '/admin',
+};
 
 export const COMPANY_NAME = 'Novellia Pets';

@@ -8,7 +8,6 @@ export default function AdminPage() {
   const { data: users } = useUsersApi().getUsers;
   const { data: petsFull } = usePetsApi().adminGetPetsFull;
 
-  console.log('petsFull: ', petsFull);
   return (
     <div className="space-y-4 w-full max-w-screen-lg">
       {/* TODO fix skip links */}
@@ -48,40 +47,49 @@ export default function AdminPage() {
           {/* expand -> all users pets records */}
         </div>
 
-        <div className="space-y-4 p-2 border rounded">
-          <div className="border-b font-bold text-2xl">Pets and records</div>
-          <div className="font-bold">Total Count: {petsFull?.allPets?.totalCount}</div>
+        <div className="space-y-6 p-2 border rounded">
+          <div className="border-b flex gap-x-4 items-end pb-2">
+            <div className="font-bold text-2xl">Pets and records</div>
+            <div className="font-bold">Total Count: {petsFull?.allPets?.totalCount}</div>
+          </div>
           {petsFull?.allPets?.nodes.map((pet) => (
-            <div key={pet.id} className="">
+            <div key={pet.id} className="border p-4 rounded space-y-4">
               <div>
-                <div>Summary</div>
+                <div className="font-bold  border-b">Summary</div>
                 <div>Name: {pet.name}</div>
                 <div>DOB: {new Date(pet.dob).toDateString()}</div>
                 <div>Type: {pet.animalByAnimalId?.name}</div>
                 <div>Person: {pet.userByUserId?.email}</div>
               </div>
 
-              <div>
-                <div>Records</div>
-                {pet.recordsByPetId.nodes.map((record) => (
-                  <div key={record.id} className="">
-                    <div>Allergy Records</div>
-                    {record.allergyRecordsByRecordId.nodes.map((allergyRecord) => (
-                      <div key={allergyRecord.id} className="">
-                        <div>{allergyRecord.name}</div>
-                        <div>{allergyRecord.reactions || 'none'}</div>
-                        <div>{allergyRecord.severity}</div>
+              <div className="space-y-3">
+                <div className="font-bold border-b">Records</div>
+                {!pet.recordsByPetId.nodes.length ? <div>No records found</div> : null}
+                <div className="space-y-3">
+                  {pet.recordsByPetId.nodes.map((record) => (
+                    <div key={record.id} className="border-b">
+                      <div className="pl-4">
+                        {record.allergyRecordsByRecordId.nodes.map((allergyRecord) => (
+                          <div key={allergyRecord.id} className="">
+                            <div>Allergy Name: {allergyRecord.name}</div>
+                            <div>Reactions: {allergyRecord.reactions || 'none'}</div>
+                            <div>Severity: {allergyRecord.severity}</div>
+                          </div>
+                        ))}
+
+                        {record.vaccineRecordsByRecordId.nodes.map((vaccineRecord) => (
+                          <div key={vaccineRecord.id} className="">
+                            <div>Vaccine Name: {vaccineRecord.name}</div>
+                            <div>
+                              Administered Date:{' '}
+                              {new Date(vaccineRecord.administeredAt).toDateString()}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                    <div>Vaccine Records</div>
-                    {record.vaccineRecordsByRecordId.nodes.map((vaccineRecord) => (
-                      <div key={vaccineRecord.id} className="">
-                        <div>{vaccineRecord.name}</div>
-                        <div>{new Date(vaccineRecord.administeredAt).toDateString()}</div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ))}

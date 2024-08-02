@@ -88,7 +88,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     }
 
     setReadyToRender(true);
-  }, [isPrivateRoute, isPublicRoute, router, currentUser, hydrating]);
+  }, [isPrivateRoute, isPublicRoute, isAdminRoute, router, currentUser, hydrating]);
 
   if (!readyToRender) {
     return <div>LOADING...</div>; //<Loading />
