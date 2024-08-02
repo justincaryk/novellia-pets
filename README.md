@@ -4,15 +4,14 @@
 
 - [Install Docker](https://docs.docker.com/engine/install/)
 - [Install node](https://nodejs.org/en/download/prebuilt-installer/current)
-- [Install node version manager (nvm)](https://github.com/nvm-sh/nvm) \*Optional
 
 ### About this repository
 
 This repo will spin up the following services:
 
 - Node server that includes
-  - TypeScript
-  - GraphQL via postgraphile
+  - Typescript
+  - Postgraphile
 
 - NextJS service that includes
   - Typescript
@@ -26,28 +25,16 @@ This repo will spin up the following services:
 
 ### Getting started
 
-1. Copy `.env.exmaple` into `.env` and update any missing values
-2. Install frontend dependencies - Follow instructions in `/frontend/README.md`
-3. Install backend packages - Follow instructions in `/backend/README.md`
-4. Confirm `docker-compose.yml` works:
+1. Copy `.env.exmaple` into `.env`
 
 ```bash
-docker build
+cp .env.example .env
 ```
 
-5. Docker Profiles have been set up for the frontend and backend directories. The db is always configured to run. Choose which best suits your development requirements:
+2. To spin up the whole app: `docker compose --profile backend --profile frontend up -d`
 
-- To spin up nextapp and db only: `docker compose --profile frontend up`
-- To spin up backend and db only: `docker compose --profile backend up`
-- To spin up the whole app: `docker compose --profile backend --profile frontend up`
+The `-d` flag runs Docker in a detached state, which will free up the terminal window.
 
-If you want to run these in a detached state, you can append the `-d` flag to the end of the commands above, which will free up the terminal window.
-
-**Note: You can also skip Docker and spin each directory in a separate terminal, if desired.**
-
-- For frontend dev: `cd frontend && yarn dev`
-- For backend dev: `cd backend && yarn dev`
-- Ensure you have postgres instance setup!
 
 ### TODO
 
@@ -61,15 +48,16 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 - [x] update signup & signin api calls on front end
 - [x] add a pet view
 - [x] new record forms
-- [] admin dashboard view
-   - [] view pets
-   - [] view 
+- [x] admin dashboard view
+   - [x] view pets
+   - [x] view 
 - [] user dashboard view
 - [] bg does not extend full page on dash
 - [] dropdown needs to work with keyboard
 - [] first-pet-form > proper max date validation
 - [] dashboard > mobile responsive
 - [] dashboard > refactor
+- [] admin > style + refactor
 - [] search TODOs
 - [] currentUser should be extended with a fetch request to the user doc to get firstname, lastname
 
@@ -82,14 +70,12 @@ If you want to run these in a detached state, you can append the `-d` flag to th
 
 **Cleanup**
 
+- [] add notes on extending enum (severity: mild/severe - possibly add moderate)
 - [] update ERD with final values
 - [] update schema with final values
+- [] write notes
+- [] confirm everything spins up from scratch
 
-**Extras**
-- [] dog logo ?
-- [] malware scanner
-  `clamav.js` or `malware-scanner`
-- [] add notes on extending enum (severity: mild/severe - possibly add moderate)
 
 
 ### Thoughts / Considerations
@@ -116,3 +102,30 @@ Security:
   - admin has write for themselves only 
   - row level security with policies that do check on jwt 
   - adds an insert trigger to ensure users only insert pets/records which they own
+
+
+  ## Local Development
+
+
+1. Copy `.env.exmaple` into `.env` and update any missing values
+2. Install frontend dependencies - Follow instructions in `/frontend/README.md`
+3. Install backend packages - Follow instructions in `/backend/README.md`
+4. Confirm `docker-compose.yml` works:
+
+```bash
+docker build
+```
+
+5. Docker Profiles have been set up for the frontend and backend directories. The db is always configured to run. Choose which best suits your development requirements:
+
+- To spin up nextapp and db only: `docker compose --profile frontend up`
+- To spin up backend and db only: `docker compose --profile backend up`
+- To spin up the whole app: `docker compose --profile backend --profile frontend up`
+
+If you want to run these in a detached state, you can append the `-d` flag to the end of the commands above, which will free up the terminal window.
+
+**Note: You can also skip Docker and spin each directory in a separate terminal, if desired.**
+
+- For frontend dev: `cd frontend && yarn dev`
+- For backend dev: `cd backend && yarn dev`
+- Ensure you have postgres instance setup!
