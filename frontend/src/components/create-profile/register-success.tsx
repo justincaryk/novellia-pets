@@ -27,7 +27,7 @@ export default function RegisterSuccess({ result }: RegisterSuccessProps) {
     setCurrentUser({
       userId: parsed.user_id,
       email: parsed.email,
-      userRole: parsed.user_role,
+      userRole: parsed.role,
       jwt: result.jwtToken,
       pauseOnRoute: true,
     });
